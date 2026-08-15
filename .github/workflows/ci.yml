@@ -1,0 +1,103 @@
+---
+name: Ascender Kit CI
+
+on:
+  push:
+    branches:
+      - main
+      - stable-*
+  pull_request:
+    branches:
+      - main
+      - stable-*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0
+        with:
+          python-version: "3.x"
+
+      - name: Install linters
+        run: pip install black==26.5.1 flake8==7.3.0
+
+      - name: Check formatting
+        run: black --check --diff ascenderkit tests setup.py
+
+      - name: Run flake8
+        run: flake8 ascenderkit
+
+  test:
+    name: Test (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          # The oldest and newest supported interpreters. Version-specific
+          # breakage lives at the boundaries: APIs removed at the top of the
+          # range, and not yet available at the bottom.
+          - "3.11"
+          - "3.14"
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          # setuptools_scm reads the version from tags, which a shallow
+          # checkout does not fetch. It falls back to a 0.1.dev version
+          # without them, so the tests would not run against the real one.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install the package and test dependencies
+        run: |
+          pip install -e ".[websockets,crypto]"
+          pip install pytest pytest-mock coverage
+
+      - name: Run tests
+        run: coverage run --source ascenderkit -m pytest tests/unit -v
+
+      - name: Report coverage
+        run: coverage report -m
+
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          # setuptools_scm derives the version from tags, which a shallow
+          # checkout does not fetch.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6.3.0
+        with:
+          python-version: "3.x"
+
+      - name: Build sdist and wheel
+        run: |
+          pip install build twine
+          python -m build
+
+      - name: Check the built distribution
+        run: twine check dist/*
+
+      - name: Verify the console scripts are installable
+        run: |
+          pip install dist/*.whl
+          ascender --help
