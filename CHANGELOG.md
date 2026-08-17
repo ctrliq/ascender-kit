@@ -143,8 +143,19 @@ and this project adheres to the versioning of
 - The fallback that prints the global help when the server cannot be reached no
   longer depends on `argv[0]` matching the literal string `ascender`, which it
   never does when the console script is invoked by absolute path.
+- Launching a system job template reports the real problem when the launched job
+  cannot be found afterwards. The message built for that case read
+  `result.json['job']`, a key the launch response does not carry — it answers
+  with `system_job` — so the diagnostic raised `KeyError: 'job'` and hid the
+  condition it was written to describe.
 
 ### Security
+
+- `ascender import -f yaml` parses its input with `yaml.safe_load()`. It read
+  stdin through the loader that implements the `!include` and `!import` tags,
+  which resolve to local files relative to the working directory, so an export
+  file from an untrusted source could pull local file contents into the payload
+  sent to the server. Those tags were never part of the export format.
 
 - License and duplicate-detection checks match with plain substring tests rather
   than `.*`-wrapped regular expressions evaluated against whole response bodies,

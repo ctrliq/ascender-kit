@@ -279,7 +279,8 @@ class Page(object):
         r = self.connection.patch(self.endpoint, json)
         return self.page_identity(r, request_json=json)
 
-    def post(self, json={}):
+    def post(self, json=None):
+        json = {} if json is None else json
         r = self.connection.post(self.endpoint, json)
         return self.page_identity(r, request_json=json)
 
@@ -457,7 +458,8 @@ class TentativePage(str):
             # We did not find it given these params, we will create it instead
             return self.create(**query_parameters)
 
-    def post(self, payload={}):
+    def post(self, payload=None):
+        payload = {} if payload is None else payload
         return self._create().post(payload)
 
     def put(self):

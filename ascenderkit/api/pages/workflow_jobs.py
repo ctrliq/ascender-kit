@@ -5,10 +5,14 @@ from . import page
 
 class WorkflowJob(UnifiedJob):
     def __str__(self):
+        # NOTE: UnifiedJob is skipped in the MRO on purpose. Its __str__ reports
+        # fields (result_stdout, job_args, ...) that the workflow_job endpoint
+        # does not expose, so the plain Base representation is used instead.
         # TODO: Update after endpoint's fields are finished filling out
         return super(UnifiedJob, self).__str__()
 
-    def relaunch(self, payload={}):
+    def relaunch(self, payload=None):
+        payload = {} if payload is None else payload
         result = self.related.relaunch.post(payload)
         return self.walk(result.url)
 

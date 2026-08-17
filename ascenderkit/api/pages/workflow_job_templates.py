@@ -15,8 +15,9 @@ class WorkflowJobTemplate(HasCopy, HasCreate, HasNotifications, HasSurvey, Unifi
     optional_dependencies = [Organization]
     NATURAL_KEY = ('organization', 'name')
 
-    def launch(self, payload={}):
+    def launch(self, payload=None):
         """Launch using related->launch endpoint."""
+        payload = {} if payload is None else payload
         # get related->launch
         launch_pg = self.get_related('launch')
 

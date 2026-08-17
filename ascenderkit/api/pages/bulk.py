@@ -13,7 +13,8 @@ page.register_page([resources.bulk, (resources.bulk, 'get')], Bulk)
 
 
 class BulkJobLaunch(base.Base):
-    def post(self, payload={}):
+    def post(self, payload=None):
+        payload = {} if payload is None else payload
         result = self.connection.post(self.endpoint, payload)
         if 'url' in result.json():
             return self.walk(result.json()['url'])

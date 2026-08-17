@@ -112,7 +112,7 @@ class TestOptions(unittest.TestCase):
 
         out = StringIO()
         self.parser.choices['create'].print_help(out)
-        assert '--username TEXT  Please specify a username'
+        assert '--username TEXT  Please specify a username' in out.getvalue()
 
     def test_integer_argument(self):
         page = OptionsPage.from_json(

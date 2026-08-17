@@ -5,7 +5,8 @@ from . import page
 
 
 class Job(UnifiedJob):
-    def relaunch(self, payload={}):
+    def relaunch(self, payload=None):
+        payload = {} if payload is None else payload
         result = self.related.relaunch.post(payload)
         return self.walk(result.endpoint)
 

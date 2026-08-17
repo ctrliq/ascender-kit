@@ -2,7 +2,7 @@ import yaml
 import json
 import os
 
-from ascenderkit import api, config, yaml_file
+from ascenderkit import api, config
 from ascenderkit.exceptions import ImportExportError
 from ascenderkit.utils import to_str
 from ascenderkit.api.pages import Page
@@ -136,7 +136,10 @@ class Import(CustomCommand):
         if fmt == 'json':
             data = json.load(client.stdin)
         elif fmt == 'yaml':
-            data = yaml.load(client.stdin, Loader=yaml_file.Loader)
+            # safe_load only: the import payload is untrusted input, and the
+            # !include/!import tags of yaml_file.Loader would let it pull
+            # arbitrary local files into the data sent to the server.
+            data = yaml.safe_load(client.stdin)
         else:
             raise ImportExportError("Unsupported format for Import: " + fmt)
 

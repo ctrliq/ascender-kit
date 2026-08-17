@@ -11,8 +11,9 @@ from . import page
 class AdHocCommand(HasCreate, UnifiedJob):
     dependencies = [Inventory, Credential]
 
-    def relaunch(self, payload={}):
+    def relaunch(self, payload=None):
         """Relaunch the command using the related->relaunch endpoint"""
+        payload = {} if payload is None else payload
         # navigate to relaunch_pg
         relaunch_pg = self.get_related('relaunch')
 

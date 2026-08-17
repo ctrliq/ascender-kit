@@ -14,7 +14,7 @@
 
 
 ## Checklist
-- [ ] Tests pass (`pytest test/`)
-- [ ] Linting passes (`black --check ascenderkit test setup.py`, `flake8 ascenderkit`)
+- [ ] Tests pass (`pytest tests/unit`)
+- [ ] Linting passes (`black --check ascenderkit tests setup.py`, `flake8 ascenderkit`)
 - [ ] Changelog entry added under `Unreleased` (if user-facing change)
 - [ ] Documentation updated (if applicable)
