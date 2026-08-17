@@ -1,0 +1,18 @@
+This product includes software originally developed by
+  https://github.com/ansible/awx
+as the `awxkit` package. All original code is copyright by their respective
+authors and is LICENSED under the Apache 2.0 License (see /LICENSE).
+
+The code has been modified by Ctrl IQ, Inc. and the modifications are
+Copyright 2026 by Ctrl IQ, Inc. All rights reserved.
+Any and all changes are being distributed under the original License
+Apache 2.0 License (see /LICENSE).
+
+Modifications by Ctrl IQ, Inc. include, but are not limited to:
+  - Renaming the distribution to `ascender-kit`, the importable module to
+    `ascenderkit`, and the console entry points to `ascender` and
+    `ascender-shell`
+  - Renaming the `AWXKIT_*` environment variables to `ASCENDERKIT_*`
+  - Support for Ascender-specific API resources, including federated
+    inventories and conditional workflow nodes
+  - Packaging, documentation, and continuous integration for this repository

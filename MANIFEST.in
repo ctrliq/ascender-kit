@@ -1,0 +1,8 @@
+include requirements.txt
+include setup.py
+include VERSION
+include README.md
+include LICENSE
+include NOTICE.txt
+recursive-include ascenderkit *.py *.yml *.md *.rst
+recursive-include tests *.py *.yml *.md
