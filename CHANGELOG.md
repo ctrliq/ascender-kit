@@ -8,6 +8,8 @@ and this project adheres to the versioning of
 
 ## [Unreleased]
 
+## [25.5.1] - 2026-08-17
+
 ### Added
 
 - Standalone repository for the Ascender command line client, previously
