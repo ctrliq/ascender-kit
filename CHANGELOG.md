@@ -121,6 +121,10 @@ and this project adheres to the versioning of
   @vars.yml`, its nested top-level `@path` values, and the `--file` script for
   `ascender-shell` all read through a context manager now, so they no longer
   raise ResourceWarning under `python -X dev`.
+- The traceback printed under `-v` goes to stderr instead of into the middle of
+  the output document. The stream was passed to `print` as a value rather than
+  as its `file`, so an API error wrote the traceback, followed by a repr of the
+  stderr object, onto stdout ahead of the JSON or YAML being parsed there.
 - `ascender export` now says so when a named selector matches nothing, e.g.
   `export --users alcie`. It exported `{"users": []}` and exited 0, which is
   indistinguishable from a successful export, so a mistyped name produced an

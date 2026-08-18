@@ -50,7 +50,7 @@ def run(stdout=sys.stdout, stderr=sys.stderr, argv=[]):
         sys.exit(1)
     except Common as e:
         if cli.verbose:
-            print(traceback.format_exc(), sys.stderr)
+            print(traceback.format_exc(), file=stderr)
         if cli.get_config('format') == 'json':
             json.dump(e.msg, sys.stdout)
             print('')
