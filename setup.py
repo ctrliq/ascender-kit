@@ -97,7 +97,7 @@ setup(
         'Source': 'https://github.com/ctrliq/ascender-kit',
         'Issues': 'https://github.com/ctrliq/ascender-kit/issues',
     },
-    packages=find_packages(exclude=['test', 'test.*']),
+    packages=find_packages(exclude=['tests', 'tests.*']),
     cmdclass={
         'clean': CleanCommand,
     },
