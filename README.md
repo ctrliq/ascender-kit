@@ -11,7 +11,7 @@ Features
 - **Consistent output formats** — JSON by default, with YAML and human-readable tables via `-f`
 - **Field filtering** — narrow output to the columns you care about with `--filter`
 - **Token-based authentication** — generate and store OAuth2.0 tokens with `ascender login`
-- **Job monitoring** — follow job output as it streams over a websocket with `--monitor`
+- **Job monitoring** — follow job output as it is produced with `--monitor` or `--wait`
 - **Import and export** — move resources between servers with `ascender export` and `ascender import`
 - **Python library** — the same API client is importable as `ascenderkit` for use in your own tooling
 
@@ -22,7 +22,7 @@ Installation
 
 Some capabilities are kept behind optional extras so the base install stays small:
 
-    pip install ascender-kit[websockets]   # job output streaming
+    pip install ascender-kit[websockets]   # WSClient, the library's live event stream
     pip install ascender-kit[formatting]   # jq-style filtering of JSON output
     pip install ascender-kit[crypto]       # encrypted credential support
 
