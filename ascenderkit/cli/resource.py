@@ -215,7 +215,11 @@ def parse_resource(client, skip_deprecated=False):
             # premature help display before action subparsers are built
             client.subparsers[k] = subparsers.add_parser(k, help='', add_help=False, **kwargs)
 
-    resource = client.parser.parse_known_args()[0].resource
+    # Parse the arguments the client was given. Left to itself argparse reads
+    # sys.argv, which is the same list when the CLI is run from a terminal and
+    # is not when it is driven in process, e.g. cli.parse_args([...]) or
+    # run(argv=[...]). Index 0 is the program name.
+    resource = client.parser.parse_known_args(client.argv[1:])[0].resource
     if resource in DEPRECATED_RESOURCES.values():
         client.argv[client.argv.index(resource)] = DEPRECATED_RESOURCES_REVERSE[resource]
         resource = DEPRECATED_RESOURCES_REVERSE[resource]

@@ -152,6 +152,11 @@ and this project adheres to the versioning of
   the actions had been registered, so it had nothing to list. Which options take
   a value is now read off the parser instead of assumed, and the help is printed
   once the actions exist. Every help form now exits 0.
+- The resource is read from the arguments the client was given rather than from
+  `sys.argv`. The two are the same list when the CLI is run from a terminal and
+  are not when it is driven in process, so `run(argv=[...])` and
+  `cli.parse_args([...])` resolved the resource out of whatever arguments the
+  host program happened to be started with.
 - `ascender host_metrics list` works again. The page class overrode `get()`
   without carrying over the `all_pages` argument, so a client-side flag was
   forwarded to the server as a query parameter and came back as
