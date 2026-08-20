@@ -25,13 +25,21 @@ class MockedCLI(CLI):
 
 @pytest.mark.parametrize('help_param', ['-h', '--help'])
 def test_help(capfd, help_param):
-    with pytest.raises(SystemExit):
-        run(['ascender {}'.format(help_param)])
+    """The global help prints even though the server cannot be reached.
+
+    That is what _is_main_help_request() is for, and it is only reached when
+    the arguments arrive as arguments: the first positional parameter of run()
+    is the output stream, so passing them there left argv empty, the CLI read
+    pytest's own sys.argv, and this same help text came back from the
+    connection error handler rather than from any help handling at all.
+    """
+    run(argv=['ascender', help_param])
     out, err = capfd.readouterr()
 
     assert "usage:" in out
     for snippet in ('--conf.host https://example.ascender.org]', '-v, --verbose'):
         assert snippet in out
+    assert 'network error' not in out
 
 
 def test_connection_error(capfd):
@@ -39,6 +47,22 @@ def test_connection_error(capfd):
     cli.parse_args(['ascender'])
     with pytest.raises(ConnectionError):
         cli.connect()
+
+
+def test_config_command_does_not_connect():
+    """`ascender config` prints local configuration, so no session is set up.
+
+    connect() returns before building one, and the check for it read sys.argv
+    rather than the arguments the client was given. In process the shortcut was
+    therefore skipped, and the command that needs no server was answered with
+    the network error from reaching for one.
+    """
+    cli = CLI()
+    cli.parse_args(['ascender', 'config'])
+    with patch('ascenderkit.cli.client.api.Api') as api_class:
+        cli.connect()
+
+    api_class.assert_not_called()
 
 
 def test_verbose_traceback_goes_to_stderr(capsys):
@@ -65,24 +89,33 @@ def test_verbose_traceback_goes_to_stderr(capsys):
     assert 'Traceback (most recent call last)' in err.getvalue()
 
 
-@pytest.mark.parametrize('resource', ['', 'invalid'])
-def test_list_resources(capfd, resource):
+def test_no_resource_prints_help(capfd):
     # if a valid resource isn't specified, print --help
     cli = MockedCLI()
-    cli.parse_args(['ascender {}'.format(resource)])
+    cli.parse_args(['ascender'])
     cli.connect()
+    cli.parse_resource()
 
-    try:
-        cli.parse_resource()
-        out, err = capfd.readouterr()
-    except SystemExit:
-        # python2 argparse raises SystemExit for invalid/missing required args,
-        # py3 doesn't
-        _, out = capfd.readouterr()
-
+    out, _ = capfd.readouterr()
     assert "usage:" in out
     for snippet in ('--conf.host https://example.ascender.org]', '-v, --verbose'):
         assert snippet in out
+
+
+def test_invalid_resource_is_rejected(capfd):
+    # the counterpart, and what the old parametrization meant to cover: a
+    # resource the server does not have is argparse's to refuse. Both cases
+    # named one string, `ascender invalid`, which was taken for the program
+    # name and dropped, so neither of them named a resource at all.
+    cli = MockedCLI()
+    cli.parse_args(['ascender', 'invalid'])
+    cli.connect()
+    with pytest.raises(SystemExit) as exit_status:
+        cli.parse_resource()
+
+    assert exit_status.value.code == 2
+    _, err = capfd.readouterr()
+    assert "invalid choice: 'invalid'" in err
 
 
 class TestHelpHandling:
