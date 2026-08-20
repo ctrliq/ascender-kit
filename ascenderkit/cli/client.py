@@ -179,7 +179,11 @@ class CLI(object):
             }
         )
 
-        _, remainder = self.parser.parse_known_args()
+        # Parse the arguments the client was given, for the same reason
+        # parse_resource() does: left to itself argparse reads sys.argv, which
+        # is not the list the client was handed when it is driven in process.
+        # Index 0 is the program name.
+        _, remainder = self.parser.parse_known_args(self.argv[1:])
         if remainder and remainder[0] == 'config':
             # the config command is special; it doesn't require
             # API connectivity
@@ -368,6 +372,12 @@ class CLI(object):
     def parse_args(self, argv, env=None):
         """Configure the global parser.ArgumentParser object and apply
         global flags (such as --help, authentication, and formatting arguments)
+
+        :param argv: the arguments to run, program name included, in the shape
+                     `sys.argv` has. Index 0 is dropped wherever these are read
+                     back, so a list without it loses its first real argument.
+        :param env: the environment the default configuration is read from,
+                    `os.environ` by default
         """
         env = env or os.environ
         self.argv = argv

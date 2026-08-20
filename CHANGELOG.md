@@ -156,7 +156,9 @@ and this project adheres to the versioning of
   `sys.argv`. The two are the same list when the CLI is run from a terminal and
   are not when it is driven in process, so `run(argv=[...])` and
   `cli.parse_args([...])` resolved the resource out of whatever arguments the
-  host program happened to be started with.
+  host program happened to be started with. `ascender config`, which needs no
+  server, was answered with a network error for the same reason: the check that
+  recognizes it read `sys.argv` too, so in process it never matched.
 - `ascender host_metrics list` works again. The page class overrode `get()`
   without carrying over the `all_pages` argument, so a client-side flag was
   forwarded to the server as a query parameter and came back as

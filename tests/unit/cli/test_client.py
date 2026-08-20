@@ -49,6 +49,22 @@ def test_connection_error(capfd):
         cli.connect()
 
 
+def test_config_command_does_not_connect():
+    """`ascender config` prints local configuration, so no session is set up.
+
+    connect() returns before building one, and the check for it read sys.argv
+    rather than the arguments the client was given. In process the shortcut was
+    therefore skipped, and the command that needs no server was answered with
+    the network error from reaching for one.
+    """
+    cli = CLI()
+    cli.parse_args(['ascender', 'config'])
+    with patch('ascenderkit.cli.client.api.Api') as api_class:
+        cli.connect()
+
+    api_class.assert_not_called()
+
+
 def test_verbose_traceback_goes_to_stderr(capsys):
     """An API error under `-v` prints a traceback, which belongs on stderr.
 
