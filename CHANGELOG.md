@@ -77,6 +77,12 @@ and this project adheres to the versioning of
   and `urllib3` is imported directly by the CLI; neither was declared, so both
   only happened to be present when another package pulled them in. `setuptools`
   is no longer required, as nothing imports it at runtime.
+- `pip install ascender-kit` no longer installs a top-level `tests` package next
+  to `ascenderkit`. The exclusion passed to `find_packages` still named the
+  `test` directory the client used before the move, so this repository's `tests`
+  tree was collected as a package and the wheel declared it in `top_level.txt`,
+  where it shadowed any other `tests` package on the path. The source
+  distribution still carries the tests, through `MANIFEST.in`.
 - Building the CLI documentation produces pages again. The Sphinx plugin builds
   the argument parser purely in order to document it, and the new early exit for
   `ascender --help` terminated the build part-way through. Because it exits zero,
