@@ -8,7 +8,7 @@ Some features are kept behind optional extras so the base install stays small:
 
 .. code:: bash
 
-    pip install "ascender-kit[websockets]"   # follow job output over a websocket
+    pip install "ascender-kit[websockets]"   # WSClient, the library's live event stream
     pip install "ascender-kit[formatting]"   # jq-style filtering of JSON output
     pip install "ascender-kit[crypto]"       # encrypted credential support
 
