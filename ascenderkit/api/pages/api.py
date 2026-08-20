@@ -125,9 +125,11 @@ class ApiV2(base.Base):
                 continue
 
             # Skip related objects (e.g. write_only fields like webhook_key)
-            # that have no NATURAL_KEY defined.
+            # that have no NATURAL_KEY defined. This is an expected outcome for
+            # such fields rather than an export problem, so it is logged at
+            # debug level and does not reach stderr on a successful export.
             if not getattr(rel_endpoint, 'NATURAL_KEY', None):
-                log.warning("Unable to construct a natural key for %r of object %s, skipping.", key, _page.endpoint)
+                log.debug("Skipping %r of object %s: the related endpoint has no natural key.", key, _page.endpoint)
                 continue
 
             rel_natural_key = rel_endpoint.get_natural_key(self._cache)

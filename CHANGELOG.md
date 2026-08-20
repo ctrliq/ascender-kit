@@ -138,6 +138,12 @@ and this project adheres to the versioning of
   indistinguishable from a successful export, so a mistyped name produced an
   empty backup with nothing to suggest anything had gone wrong. The warning goes
   to stderr; the exported document and the exit status are unchanged.
+- A successful `ascender export` no longer prints `Unable to construct a natural
+  key for 'webhook_key' of object /api/v2/projects/1/, skipping.` to stderr, for
+  that field and every other write-only related field the server advertises as a
+  POST field. Skipping such a field is the expected outcome rather than an
+  export problem, so it is logged at debug level and surfaces under `--verbose`
+  alongside the rest of the export trace.
 - Resource-level help works whatever precedes it. `ascender -k users --help`
   printed an empty action list and exited 2 with
   `the following arguments are required: action`. Two faults met there: options
