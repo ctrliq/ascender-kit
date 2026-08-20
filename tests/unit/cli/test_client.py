@@ -1,3 +1,5 @@
+import io
+import json
 import sys
 from unittest.mock import patch
 
@@ -5,6 +7,7 @@ import pytest
 from requests.exceptions import ConnectionError
 
 from ascenderkit.cli import run, CLI
+from ascenderkit.exceptions import BadRequest
 
 
 class MockedCLI(CLI):
@@ -36,6 +39,30 @@ def test_connection_error(capfd):
     cli.parse_args(['ascender'])
     with pytest.raises(ConnectionError):
         cli.connect()
+
+
+def test_verbose_traceback_goes_to_stderr(capsys):
+    """An API error under `-v` prints a traceback, which belongs on stderr.
+
+    stdout carries the document the caller asked for, and a traceback in the
+    middle of it is not parseable by whatever the output is piped into.
+
+    The stream is passed rather than captured, because the default for it is
+    bound to `sys.stderr` when this module is imported, which is not the object
+    the capture fixture installs for the duration of a test.
+    """
+    err = io.StringIO()
+    with patch('ascenderkit.cli.CLI') as cli_class:
+        cli = cli_class.return_value
+        cli.verbose = True
+        cli.get_config.side_effect = lambda key: 'json' if key == 'format' else None
+        cli.parse_resource.side_effect = BadRequest('Bad Request (400) received', {'detail': 'boom'})
+        with pytest.raises(SystemExit):
+            run(stderr=err, argv=['ascender', 'jobs', 'list', '-v'])
+
+    out, _ = capsys.readouterr()
+    assert json.loads(out) == {'detail': 'boom'}
+    assert 'Traceback (most recent call last)' in err.getvalue()
 
 
 @pytest.mark.parametrize('resource', ['', 'invalid'])
