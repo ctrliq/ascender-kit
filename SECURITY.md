@@ -35,12 +35,12 @@ of time to address the issue before making any information public.
 Ascender Kit reads credentials from environment variables, from `--conf.*`
 command line arguments, and from a credential file. Be aware that:
 
-- Command line arguments are visible to other users on the same host via the
-  process list. Prefer environment variables or `ascender login` tokens.
-- `ascender login -f human` prints a token to standard output for use in a
-  shell. Treat it like a password, and revoke it if it leaks.
-- Passing `-k` / `--conf.insecure` disables TLS certificate verification. Never
-  use it against a production server.
+- Command line arguments are visible to other users via the process list.
+- Prefer environment variables or `ascender login` tokens.
+- `ascender login -f human` prints a token to standard output for shell use.
+- Treat that token like a password, and revoke it if it leaks.
+- `-k` and `--conf.insecure` disable TLS certificate verification.
+- Never use them against a production server.
 
 ## TLS verification when used as a library
 

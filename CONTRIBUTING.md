@@ -69,7 +69,7 @@ pytest tests/integration -n 4 --dist loadfile
 
 `--dist loadfile` matters: it keeps each file on a single worker, so the tests
 within one file still run in order. They all share one server, though, so this
-is a speed-up rather than isolation — the import tests are writing while the
+is a speed-up rather than isolation, since the import tests write while the
 others read. It has been stable in practice, but a sequential run is the one to
 trust when something looks odd.
 
@@ -101,15 +101,15 @@ git checkout -b my-feature main
 
 ### Code style
 
-- Formatting is enforced by `black`, configured in `pyproject.toml` with a
-  160-character line limit and string normalization disabled. Run `black
-  ascenderkit tests setup.py` before committing.
-- `flake8` settings live in `tox.ini`. The selected checks are deliberately
-  narrow, matching the main Ascender repository.
-- New API pages belong in `ascenderkit/api/pages/` and must be registered with
-  `page.register_page()` so the client can resolve them from an endpoint.
-- New CLI behaviour that is not simply discovered from the API belongs in
-  `ascenderkit/cli/resource.py` as a custom command.
+- Formatting is enforced by `black`, configured in `pyproject.toml`.
+- It uses a 160-character line limit with string normalization disabled.
+- Run `black ascenderkit tests setup.py` before committing.
+- `flake8` settings live in `tox.ini`.
+- The selected checks are deliberately narrow, matching the main Ascender repo.
+- New API pages belong in `ascenderkit/api/pages/`.
+- Register them with `page.register_page()` so the client resolves them.
+- CLI behaviour not discovered from the API belongs in `ascenderkit/cli/resource.py`.
+- Add it there as a custom command.
 
 ### Values that must not be renamed
 
@@ -155,7 +155,7 @@ Longer description of what changed and why, if needed.
 
 1. Make sure the tests and linters pass locally (`tox`).
 2. Add a changelog entry if the change is user-facing.
-3. One logical change per PR — don't bundle unrelated fixes.
+3. One logical change per PR. Do not bundle unrelated fixes.
 4. Target the `main` branch.
 5. Fill in the PR template (summary, type of change, component, checklist).
 
