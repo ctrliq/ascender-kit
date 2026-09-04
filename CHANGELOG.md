@@ -10,7 +10,9 @@ and this project adheres to the versioning of
 
 ## [25.6.1] - 2026-09-03
 
-No Changes - Version bump to match Ascender
+### Changed
+
+- No Changes - Version bump to match Ascender
 
 ## [25.6.0] - 2026-09-01
 
