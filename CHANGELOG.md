@@ -8,6 +8,53 @@ and this project adheres to the versioning of
 
 ## [Unreleased]
 
+## [25.6.1] - 2026-09-03
+
+No Changes - Version bump to match Ascender
+
+## [25.6.0] - 2026-09-01
+
+### Changed
+
+- Building from source requires `setuptools` 84.0.0 or newer and
+  `setuptools-scm` 10.2.1 or newer. Both are build requirements declared in
+  `pyproject.toml` and are only needed to build the package; installing the
+  published wheel is unaffected.
+- The README and the CLI install guide no longer credit `--monitor` to a
+  websocket. The flag follows job output as it is produced, as does `--wait`,
+  and neither needs the `websockets` extra, which provides `WSClient`, the
+  library's live event stream.
+- The README, `CONTRIBUTING.md` and `SECURITY.md` follow a common layout and
+  describe the repository as it stands.
+- The CI workflows run on `actions/checkout` 7.0.1 and `actions/setup-python`
+  7.0.0.
+
+### Fixed
+
+- `pip install ascender-kit` no longer installs a top-level `tests` package next
+  to `ascenderkit`. The exclusion passed to `find_packages` still named the
+  `test` directory the client used before the move, so this repository's `tests`
+  tree was collected as a package and the wheel declared it in `top_level.txt`,
+  where it shadowed any other `tests` package on the path. The source
+  distribution still carries the tests, through `MANIFEST.in`.
+- The traceback printed under `-v` goes to stderr instead of into the middle of
+  the output document. The stream was passed to `print` as a value rather than
+  as its `file`, so an API error wrote the traceback, followed by a repr of the
+  stderr object, onto stdout ahead of the JSON or YAML being parsed there.
+- A successful `ascender export` no longer prints `Unable to construct a natural
+  key for 'webhook_key' of object /api/v2/projects/1/, skipping.` to stderr, for
+  that field and every other write-only related field the server advertises as a
+  POST field. Skipping such a field is the expected outcome rather than an
+  export problem, so it is logged at debug level and surfaces under `--verbose`
+  alongside the rest of the export trace.
+- The resource is read from the arguments the client was given rather than from
+  `sys.argv`. The two are the same list when the CLI is run from a terminal and
+  are not when it is driven in process, so `run(argv=[...])` and
+  `cli.parse_args([...])` resolved the resource out of whatever arguments the
+  host program happened to be started with. `ascender config`, which needs no
+  server, was answered with a network error for the same reason: the check that
+  recognizes it read `sys.argv` too, so in process it never matched.
+
 ## [25.5.1] - 2026-08-17
 
 ### Added
@@ -79,12 +126,6 @@ and this project adheres to the versioning of
   and `urllib3` is imported directly by the CLI; neither was declared, so both
   only happened to be present when another package pulled them in. `setuptools`
   is no longer required, as nothing imports it at runtime.
-- `pip install ascender-kit` no longer installs a top-level `tests` package next
-  to `ascenderkit`. The exclusion passed to `find_packages` still named the
-  `test` directory the client used before the move, so this repository's `tests`
-  tree was collected as a package and the wheel declared it in `top_level.txt`,
-  where it shadowed any other `tests` package on the path. The source
-  distribution still carries the tests, through `MANIFEST.in`.
 - Building the CLI documentation produces pages again. The Sphinx plugin builds
   the argument parser purely in order to document it, and the new early exit for
   `ascender --help` terminated the build part-way through. Because it exits zero,
@@ -129,21 +170,11 @@ and this project adheres to the versioning of
   @vars.yml`, its nested top-level `@path` values, and the `--file` script for
   `ascender-shell` all read through a context manager now, so they no longer
   raise ResourceWarning under `python -X dev`.
-- The traceback printed under `-v` goes to stderr instead of into the middle of
-  the output document. The stream was passed to `print` as a value rather than
-  as its `file`, so an API error wrote the traceback, followed by a repr of the
-  stderr object, onto stdout ahead of the JSON or YAML being parsed there.
 - `ascender export` now says so when a named selector matches nothing, e.g.
   `export --users alcie`. It exported `{"users": []}` and exited 0, which is
   indistinguishable from a successful export, so a mistyped name produced an
   empty backup with nothing to suggest anything had gone wrong. The warning goes
   to stderr; the exported document and the exit status are unchanged.
-- A successful `ascender export` no longer prints `Unable to construct a natural
-  key for 'webhook_key' of object /api/v2/projects/1/, skipping.` to stderr, for
-  that field and every other write-only related field the server advertises as a
-  POST field. Skipping such a field is the expected outcome rather than an
-  export problem, so it is logged at debug level and surfaces under `--verbose`
-  alongside the rest of the export trace.
 - Resource-level help works whatever precedes it. `ascender -k users --help`
   printed an empty action list and exited 2 with
   `the following arguments are required: action`. Two faults met there: options
@@ -152,13 +183,6 @@ and this project adheres to the versioning of
   the actions had been registered, so it had nothing to list. Which options take
   a value is now read off the parser instead of assumed, and the help is printed
   once the actions exist. Every help form now exits 0.
-- The resource is read from the arguments the client was given rather than from
-  `sys.argv`. The two are the same list when the CLI is run from a terminal and
-  are not when it is driven in process, so `run(argv=[...])` and
-  `cli.parse_args([...])` resolved the resource out of whatever arguments the
-  host program happened to be started with. `ascender config`, which needs no
-  server, was answered with a network error for the same reason: the check that
-  recognizes it read `sys.argv` too, so in process it never matched.
 - `ascender host_metrics list` works again. The page class overrode `get()`
   without carrying over the `all_pages` argument, so a client-side flag was
   forwarded to the server as a query parameter and came back as
