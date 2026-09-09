@@ -8,6 +8,12 @@ and this project adheres to the versioning of
 
 ## [Unreleased]
 
+## [25.6.2] - 2026-09-09
+
+### Changed
+
+- No Changes - Version bump to match Ascender
+
 ## [25.6.1] - 2026-09-03
 
 ### Changed
