@@ -90,8 +90,9 @@ class JobTemplate(HasCopy, HasCreate, HasInstanceGroups, HasNotifications, HasSu
                 extra_vars = json.dumps(extra_vars)
             payload.update(extra_vars=extra_vars)
 
-        if kwargs.get('project'):
-            payload.update(project=kwargs.get('project').id, playbook=playbook)
+        project = kwargs.get('project')
+        if project:
+            payload.update(project=project.id, playbook=playbook)
 
         payload = set_payload_foreign_key_args(payload, ('inventory', 'credential', 'webhook_credential', 'execution_environment'), kwargs)
 

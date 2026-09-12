@@ -413,11 +413,12 @@ class TentativePage(str):
             page = self.get(username=query_parameters['username'])
         else:
             assert query_parameters.get('name'), 'For this resource, you must call this method with a "name" to look up the object by'
-            if query_parameters.get('organization'):
-                if isinstance(query_parameters.get('organization'), int):
-                    page = self.get(name=query_parameters['name'], organization=query_parameters.get('organization'))
+            organization = query_parameters.get('organization')
+            if organization:
+                if isinstance(organization, int):
+                    page = self.get(name=query_parameters['name'], organization=organization)
                 else:
-                    page = self.get(name=query_parameters['name'], organization=query_parameters.get('organization').id)
+                    page = self.get(name=query_parameters['name'], organization=organization.id)
             else:
                 page = self.get(name=query_parameters['name'])
         if page and page.results:
@@ -441,11 +442,12 @@ class TentativePage(str):
         if query_parameters.get('username') and 'users' in self:
             page = self.get(username=query_parameters['username'])
         if query_parameters.get('name'):
-            if query_parameters.get('organization'):
-                if isinstance(query_parameters.get('organization'), int):
-                    page = self.get(name=query_parameters['name'], organization=query_parameters.get('organization'))
+            organization = query_parameters.get('organization')
+            if organization:
+                if isinstance(organization, int):
+                    page = self.get(name=query_parameters['name'], organization=organization)
                 else:
-                    page = self.get(name=query_parameters['name'], organization=query_parameters.get('organization').id)
+                    page = self.get(name=query_parameters['name'], organization=organization.id)
             else:
                 page = self.get(name=query_parameters['name'])
 

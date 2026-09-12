@@ -26,8 +26,9 @@ class Project(HasCopy, HasCreate, HasNotifications, UnifiedJobTemplate):
         if organization is not None:
             payload.organization = organization.id
 
-        if kwargs.get('credential'):
-            payload.credential = kwargs.get('credential').id
+        credential = kwargs.get('credential')
+        if credential:
+            payload.credential = credential.id
 
         fields = (
             'scm_branch',

@@ -59,11 +59,13 @@ class WorkflowJobTemplate(HasCopy, HasCreate, HasNotifications, HasSurvey, Unifi
                 extra_vars = json.dumps(extra_vars)
             payload.update(extra_vars=extra_vars)
 
-        if kwargs.get('organization'):
-            payload.organization = kwargs.get('organization').id
+        organization = kwargs.get('organization')
+        if organization:
+            payload.organization = organization.id
 
-        if kwargs.get('inventory'):
-            payload.inventory = kwargs.get('inventory').id
+        inventory = kwargs.get('inventory')
+        if inventory:
+            payload.inventory = inventory.id
 
         if kwargs.get('webhook_credential'):
             webhook_cred = kwargs.get('webhook_credential')

@@ -196,11 +196,12 @@ def logged_sleep(duration, level='DEBUG', stack_depth=1):
     level = getattr(logging, level.upper())
     # based on
     # http://stackoverflow.com/questions/1095543/get-name-of-calling-functions-module-in-python
-    try:
-        frm = inspect.stack()[stack_depth]
-        logger = logging.getLogger(inspect.getmodule(frm[0]).__name__)
-    except AttributeError:  # module is None (interactive shell)
-        logger = log  # fall back to utils logger
+    frm = inspect.stack()[stack_depth]
+    module = inspect.getmodule(frm[0])
+    # getmodule returns None for a frame with no module, which is what an
+    # interactive shell gives. This used to read .__name__ off it and catch the
+    # resulting AttributeError, which also swallowed any other one raised here.
+    logger = logging.getLogger(module.__name__) if module else log
     logger.log(level, 'Sleeping for {0} seconds.'.format(duration))
     time.sleep(duration)
 
