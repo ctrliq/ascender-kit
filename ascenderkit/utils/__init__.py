@@ -54,7 +54,7 @@ class PseudoNamespace(dict):
         if not isinstance(_d, dict):
             _d = {}
         _d.update(loaded)
-        super(PseudoNamespace, self).__init__(_d)
+        super().__init__(_d)
 
         # Convert nested structures into PseudoNamespaces
         for k, v in _d.items():
@@ -97,7 +97,7 @@ class PseudoNamespace(dict):
                 if tuple_converted:
                     value = tuple(value)
 
-        super(PseudoNamespace, self).__setitem__(key, value)
+        super().__setitem__(key, value)
 
     def __delattr__(self, attr):
         self.__delitem__(attr)

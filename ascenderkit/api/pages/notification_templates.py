@@ -37,7 +37,7 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
         if there are notifications pending.
         """
         try:
-            super(NotificationTemplate, self).silent_delete()
+            super().silent_delete()
         except exc.MethodNotAllowed:
             pass
 

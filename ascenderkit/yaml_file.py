@@ -13,7 +13,7 @@ file_path_cache = {}
 class Loader(yaml.SafeLoader):
     def __init__(self, stream):
         self._root = os.path.split(stream.name)[0]
-        super(Loader, self).__init__(stream)
+        super().__init__(stream)
         Loader.add_constructor('!include', Loader.include)
         Loader.add_constructor('!import', Loader.include)
 

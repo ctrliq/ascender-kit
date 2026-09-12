@@ -25,7 +25,7 @@ def log_elapsed(r, *args, **kwargs):  # requests hook to display API elapsed tim
     log.debug('"{0.request.method} {0.url}" elapsed: {0.elapsed}'.format(r))
 
 
-class Connection(object):
+class Connection:
     """A requests.Session wrapper for establishing connection w/ Ascender instance"""
 
     def __init__(self, server, verify=False):

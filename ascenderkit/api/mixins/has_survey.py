@@ -1,7 +1,7 @@
 from ascenderkit.utils import random_title
 
 
-class HasSurvey(object):
+class HasSurvey:
     def add_survey(self, spec=None, name=None, description=None, required=False, enabled=True):
         payload = dict(
             name=name or 'Survey - {}'.format(random_title()),

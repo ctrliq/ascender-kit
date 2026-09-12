@@ -7,7 +7,7 @@ from ascenderkit.utils import is_list_or_tuple, not_provided
 log = logging.getLogger(__name__)
 
 
-class URLRegistry(object):
+class URLRegistry:
     def __init__(self):
         self.store = defaultdict(dict)
         self.default = {}

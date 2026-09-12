@@ -63,17 +63,17 @@ class UnifiedJob(HasStatus, base.Base):
          * self.has_traceback == False
          * self.failed == False
         """
-        return super(UnifiedJob, self).is_successful and not (self.has_traceback or self.failed)
+        return super().is_successful and not (self.has_traceback or self.failed)
 
     def wait_until_status(self, status, interval=1, timeout=60, since_job_created=True, **kwargs):
         if since_job_created:
             timeout = timeout - seconds_since_date_string(self.created)
-        return super(UnifiedJob, self).wait_until_status(status, interval, timeout, **kwargs)
+        return super().wait_until_status(status, interval, timeout, **kwargs)
 
     def wait_until_completed(self, interval=5, timeout=60 * 8, since_job_created=True, **kwargs):
         if since_job_created:
             timeout = timeout - seconds_since_date_string(self.created)
-        return super(UnifiedJob, self).wait_until_completed(interval, timeout, **kwargs)
+        return super().wait_until_completed(interval, timeout, **kwargs)
 
     @property
     def has_traceback(self):

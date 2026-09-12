@@ -44,7 +44,7 @@ class CustomAction(metaclass=CustomActionRegistryMeta):
         pass
 
 
-class Launchable(object):
+class Launchable:
     @property
     def options_endpoint(self):
         return self.page.endpoint + '1/{}/'.format(self.action)
@@ -223,7 +223,7 @@ class WorkflowLaunch(Launchable, CustomAction):
     resource = 'workflow_job_templates'
 
 
-class HasStdout(object):
+class HasStdout:
     action = 'stdout'
 
     def add_arguments(self, parser, resource_options_parser):
@@ -254,7 +254,7 @@ class AdhocCommandStdout(HasStdout, CustomAction):
     resource = 'ad_hoc_commands'
 
 
-class AssociationMixin(object):
+class AssociationMixin:
     action = 'associate'
 
     def add_arguments(self, parser, resource_options_parser):
@@ -268,7 +268,7 @@ class AssociationMixin(object):
                 model_name = param
             help_text = 'The ID (or name) of the {} to {}'.format(model_name, self.action)
 
-            class related_page(object):
+            class related_page:
                 def __init__(self, connection, resource):
                     self.conn = connection
                     self.resource = {
@@ -417,7 +417,7 @@ class SettingsList(CustomAction):
         return self.page.get()
 
 
-class RoleMixin(object):
+class RoleMixin:
     has_roles = [
         ['organizations', 'organization'],
         ['projects', 'project'],
@@ -453,7 +453,7 @@ class RoleMixin(object):
                 # don't add a team to a team
                 continue
 
-            class related_page(object):
+            class related_page:
                 def __init__(self, connection, resource):
                     self.conn = connection
                     if resource == 'inventories':
@@ -550,7 +550,7 @@ class SettingsModify(CustomAction):
         return True
 
 
-class HasMonitor(object):
+class HasMonitor:
     action = 'monitor'
 
     def add_arguments(self, parser, resource_options_parser):

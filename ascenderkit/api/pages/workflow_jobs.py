@@ -48,7 +48,7 @@ class WorkflowJob(UnifiedJob):
         if 'result_stdout' not in self.json:
             return 'Unprovided Ascender field.'
         else:
-            return super(WorkflowJob, self).result_stdout
+            return super().result_stdout
 
 
 page.register_page(resources.workflow_job, WorkflowJob)

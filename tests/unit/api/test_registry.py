@@ -3,11 +3,11 @@ import pytest
 from ascenderkit.api.registry import URLRegistry
 
 
-class One(object):
+class One:
     pass
 
 
-class Two(object):
+class Two:
     pass
 
 

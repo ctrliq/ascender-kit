@@ -206,7 +206,7 @@ def test_seconds_since_date_string(date_string, now, expected):
         assert utils.seconds_since_date_string(date_string) == expected
 
 
-class RecordingCallback(object):
+class RecordingCallback:
     def __init__(self, value=True):
         self.call_count = 0
         self.value = value
@@ -216,7 +216,7 @@ class RecordingCallback(object):
         return self.value
 
 
-class TestPollUntil(object):
+class TestPollUntil:
     @pytest.mark.parametrize('timeout', [0, 0.0, -0.5, -1, -9999999])
     def test_callback_called_once_for_non_positive_timeout(self, timeout):
         with mock.patch('ascenderkit.utils.logged_sleep') as sleep:
@@ -236,7 +236,7 @@ class TestPollUntil(object):
             assert utils.poll_until(lambda: callback_value) == callback_value
 
 
-class TestPseudoNamespace(object):
+class TestPseudoNamespace:
     def test_set_item_check_item(self):
         pn = utils.PseudoNamespace()
         pn['key'] = 'value'
@@ -341,7 +341,7 @@ class TestPseudoNamespace(object):
         assert pn.one[1].three.five[1].seven == 7
 
 
-class TestUpdatePayload(object):
+class TestUpdatePayload:
     def test_empty_payload(self):
         fields = ('one', 'two', 'three', 'four')
         kwargs = dict(two=2, four=4)

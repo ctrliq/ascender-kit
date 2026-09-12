@@ -59,7 +59,7 @@ class UnifiedJobTemplate(HasStatus, base.Base):
         if hasattr(self, '_schedules_store'):
             for schedule in self._schedules_store:
                 schedule.silent_delete()
-        return super(UnifiedJobTemplate, self).silent_delete()
+        return super().silent_delete()
 
     @property
     def is_successful(self):
@@ -68,7 +68,7 @@ class UnifiedJobTemplate(HasStatus, base.Base):
         2) not last_update_failed
         3) last_updated
         """
-        return super(UnifiedJobTemplate, self).is_successful and not self.last_update_failed and self.last_updated is not None
+        return super().is_successful and not self.last_update_failed and self.last_updated is not None
 
 
 page.register_page(resources.unified_job_template, UnifiedJobTemplate)

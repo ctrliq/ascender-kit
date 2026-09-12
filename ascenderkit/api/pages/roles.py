@@ -15,7 +15,7 @@ class Role(base.Base):
         if cache is None:
             cache = page.PageCache()
 
-        natural_key = super(Role, self).get_natural_key(cache=cache)
+        natural_key = super().get_natural_key(cache=cache)
         related_objs = [related for name, related in self.related.items() if name not in ('users', 'teams')]
         if related_objs:
             related_endpoint = cache.get_page(related_objs[0])

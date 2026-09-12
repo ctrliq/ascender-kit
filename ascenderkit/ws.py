@@ -23,7 +23,7 @@ status_changed = 'status_changed'
 summary = 'summary'
 
 
-class WSClient(object):
+class WSClient:
     """Provides a basic means of testing pub/sub notifications with payloads similar to
     'groups': {'jobs': ['status_changed', 'summary'],
                'schedules': ['changed'],

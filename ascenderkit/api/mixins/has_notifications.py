@@ -6,7 +6,7 @@ notification_endpoints = ("notification_templates", "notification_templates_star
 wfjt_notification_endpoints = notification_endpoints + ('notification_templates_approvals',)
 
 
-class HasNotifications(object):
+class HasNotifications:
     def add_notification_template(self, notification_template, endpoint="notification_templates_success"):
         from ascenderkit.api.pages.workflow_job_templates import WorkflowJobTemplate
 

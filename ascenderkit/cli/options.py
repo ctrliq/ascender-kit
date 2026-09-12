@@ -70,7 +70,7 @@ class JsonDumpsAction(argparse.Action):
         setattr(namespace, self.dest, json.dumps(json_vars))
 
 
-class ResourceOptionsParser(object):
+class ResourceOptionsParser:
     deprecated = False
 
     def __init__(self, v2, page, resource, parser):

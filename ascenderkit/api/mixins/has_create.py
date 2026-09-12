@@ -133,7 +133,7 @@ def all_instantiated_dependencies(*potential_parents):
     return all_instantiated
 
 
-class DSAdapter(object):
+class DSAdapter:
     """Access HasCreate._dependency_store dependencies by attribute instead of class.
 
     ex:
@@ -200,7 +200,7 @@ except ImportError:
     pass
 
 
-class HasCreate(object):
+class HasCreate:
     # For reference only.  Use self.ds, or self._dependency_store if mutating.
     dependencies = []
     optional_dependencies = []
@@ -217,7 +217,7 @@ class HasCreate(object):
         else:
             self._dependency_store = dependency_store.dependency_store
             self.ds = dependency_store
-        super(HasCreate, self).__init__(*a, **kw)
+        super().__init__(*a, **kw)
 
     def _update_dependencies(self, dependency_candidates):
         """updates self._dependency_store to reflect instantiated dependencies, if any."""

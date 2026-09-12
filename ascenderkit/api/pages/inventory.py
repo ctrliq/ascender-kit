@@ -390,7 +390,7 @@ class InventorySource(HasCreate, HasNotifications, UnifiedJobTemplate):
     @property
     def is_successful(self):
         """An inventory_source is considered successful when source != "" and super().is_successful ."""
-        return self.source != "" and super(InventorySource, self).is_successful
+        return self.source != "" and super().is_successful
 
     def add_credential(self, credential):
         with suppress(exc.NoContent):

@@ -3,7 +3,7 @@ import yaml
 from ascenderkit.utils import PseudoNamespace
 
 
-class HasVariables(object):
+class HasVariables:
     @property
     def variables(self):
         return PseudoNamespace(yaml.safe_load(self.json.variables))

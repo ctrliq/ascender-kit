@@ -123,7 +123,7 @@ class Project(HasCopy, HasCreate, HasNotifications, UnifiedJobTemplate):
         0) scm_type != ""
         1) unified_job_template.is_successful
         """
-        return self.scm_type != "" and super(Project, self).is_successful
+        return self.scm_type != "" and super().is_successful
 
 
 page.register_page([resources.project, (resources.projects, 'post'), (resources.project_copy, 'post')], Project)

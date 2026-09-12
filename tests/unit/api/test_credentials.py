@@ -14,7 +14,7 @@ def set_config_cred_to_desired(config, location):
     setattr(config_ref, split[-1], 'desired')
 
 
-class MockCredentialType(object):
+class MockCredentialType:
     def __init__(self, name, kind, managed=True):
         self.name = name
         self.kind = kind

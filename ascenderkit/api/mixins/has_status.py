@@ -13,7 +13,7 @@ def bytes_to_str(obj):
         return str(obj)
 
 
-class HasStatus(object):
+class HasStatus:
     completed_statuses = ['successful', 'failed', 'error', 'canceled']
     started_statuses = ['pending', 'running'] + completed_statuses
 

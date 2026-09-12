@@ -2,7 +2,7 @@ from ascenderkit.api.pages import Page
 from ascenderkit.utils import random_title
 
 
-class HasCopy(object):
+class HasCopy:
     def can_copy(self):
         return self.get_related('copy').can_copy
 

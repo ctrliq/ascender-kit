@@ -86,7 +86,7 @@ def objectify_response_json(response):
     return json
 
 
-class Page(object):
+class Page:
     endpoint = ''
 
     # Headers to send on GET. Endpoints that content-negotiate to something
@@ -126,7 +126,7 @@ class Page(object):
     def __str__(self):
         if hasattr(self, 'json'):
             return json.dumps(self.json, indent=4)
-        return str(super(Page, self).__repr__())
+        return str(super().__repr__())
 
     __repr__ = __str__
 
@@ -338,7 +338,7 @@ def exception_from_status_code(status_code):
     return _exception_map.get(status_code, None)
 
 
-class PageList(object):
+class PageList:
     NATURAL_KEY = None
 
     @property
@@ -486,7 +486,7 @@ class TentativePage(str):
     def __str__(self):
         if hasattr(self, 'endpoint'):
             return self.endpoint
-        return super(TentativePage, self).__str__()
+        return super().__str__()
 
     __repr__ = __str__
 
@@ -497,7 +497,7 @@ class TentativePage(str):
         return self.endpoint != other
 
 
-class PageCache(object):
+class PageCache:
     def __init__(self):
         self.options = {}
         self.pages_by_url = {}

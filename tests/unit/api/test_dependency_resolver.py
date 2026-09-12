@@ -225,7 +225,7 @@ class Five(MockHasCreate):
     optional_dependencies = [One]
 
 
-class IsntAHasCreate(object):
+class IsntAHasCreate:
     pass
 
 
@@ -545,7 +545,7 @@ def test_tuples_for_class_arg_cause_unshared_dependencies_when_downstream():
     assert four_wa.kw == dict(four_with_args_kw=567)
 
 
-class NotHasCreate(object):
+class NotHasCreate:
     pass
 
 

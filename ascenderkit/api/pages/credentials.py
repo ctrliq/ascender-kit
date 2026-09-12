@@ -146,7 +146,7 @@ class CredentialType(HasCreate, base.Base):
 
     def silent_delete(self):
         if not self.managed:
-            return super(CredentialType, self).silent_delete()
+            return super().silent_delete()
 
     def payload(self, kind='cloud', **kwargs):
         payload = PseudoNamespace(

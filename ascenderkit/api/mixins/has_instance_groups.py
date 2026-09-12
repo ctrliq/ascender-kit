@@ -3,7 +3,7 @@ from contextlib import suppress
 import ascenderkit.exceptions as exc
 
 
-class HasInstanceGroups(object):
+class HasInstanceGroups:
     def add_instance_group(self, instance_group):
         with suppress(exc.NoContent):
             self.related['instance_groups'].post(dict(id=instance_group.id))
