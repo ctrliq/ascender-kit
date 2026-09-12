@@ -1,7 +1,8 @@
-import collections
 import logging
 
+from requests import PreparedRequest
 from requests.auth import HTTPBasicAuth
+from requests.structures import CaseInsensitiveDict
 
 from ascenderkit.api.pages import Page, get_registered_page, exception_from_status_code
 from ascenderkit.config import config
@@ -144,7 +145,14 @@ class Base(Page):
         default_cred = config.credentials.default
         username = username or default_cred.username
         password = password or default_cred.password
-        req = collections.namedtuple('req', 'headers')({})
+        # HTTPBasicAuth.__call__ sets Authorization on the request it is given
+        # and returns it, which is the only reason a request object is built
+        # here. It used to be a namedtuple with a headers attribute, which
+        # works because __call__ touches nothing else, but is not what the
+        # interface asks for. A PreparedRequest with its headers initialised
+        # the way prepare_headers would is, and costs the same.
+        req = PreparedRequest()
+        req.headers = CaseInsensitiveDict()
         if client_id and client_secret:
             HTTPBasicAuth(client_id, client_secret)(req)
             req.headers['Content-Type'] = 'application/x-www-form-urlencoded'
