@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Tests that need a running Ascender.
 
 The whole directory is skipped unless CONTROLLER_HOST is set, so `pytest

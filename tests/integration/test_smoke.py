@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Every resource the server advertises should list in every output format."""
 
 import json

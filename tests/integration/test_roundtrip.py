@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Export, import it straight back, and export again.
 
 This is the test that would have caught the worst bug this client had: an

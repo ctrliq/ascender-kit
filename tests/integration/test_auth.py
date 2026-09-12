@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Token issuance and the token authentication path.
 
 Upstream removed token auth; Ascender keeps it, so it needs covering here.

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Launching and monitoring, and the exit codes that carry the outcome.
 
 Scripts read the status from the exit code, so the three cases have to be
