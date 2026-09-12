@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Any, Callable
 import json
 
 from ascenderkit.utils import poll_until
@@ -14,6 +15,21 @@ def bytes_to_str(obj):
 
 
 class HasStatus(object):
+    # Supplied by the Page this is mixed into: the first three come from the
+    # response body through Page.__getattr__, the rest are Page's own methods.
+    # Annotations rather than assignments, so nothing is created at runtime and
+    # nothing shadows what Page provides.
+    status: str
+    id: int
+    type: str
+    related: Any
+    job_explanation: str
+    result_stdout: str
+    result_traceback: str
+    execution_environment: Any
+    get: Callable[..., Any]
+    walk: Callable[..., Any]
+
     completed_statuses = ['successful', 'failed', 'error', 'canceled']
     started_statuses = ['pending', 'running'] + completed_statuses
 

@@ -1,7 +1,16 @@
+from typing import Any, Callable
+
 from ascenderkit.utils import random_title
 
 
 class HasSurvey(object):
+    # Supplied by the Page this is mixed into: response-body fields arrive
+    # through Page.__getattr__, the rest are Page's own. Annotations rather
+    # than assignments, so nothing is created at runtime.
+    related: Any
+    survey_enabled: bool
+    patch: Callable[..., Any]
+
     def add_survey(self, spec=None, name=None, description=None, required=False, enabled=True):
         payload = dict(
             name=name or 'Survey - {}'.format(random_title()),

@@ -1,3 +1,5 @@
+from typing import Any
+
 from contextlib import suppress
 
 import ascenderkit.exceptions as exc
@@ -7,6 +9,11 @@ wfjt_notification_endpoints = notification_endpoints + ('notification_templates_
 
 
 class HasNotifications(object):
+    # Supplied by the Page this is mixed into: response-body fields arrive
+    # through Page.__getattr__, the rest are Page's own. Annotations rather
+    # than assignments, so nothing is created at runtime.
+    related: Any
+
     def add_notification_template(self, notification_template, endpoint="notification_templates_success"):
         from ascenderkit.api.pages.workflow_job_templates import WorkflowJobTemplate
 

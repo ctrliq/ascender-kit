@@ -1,4 +1,5 @@
 from contextlib import suppress
+from typing import Any, Callable
 import inspect
 import logging
 import json
@@ -339,6 +340,17 @@ def exception_from_status_code(status_code):
 
 
 class PageList(object):
+    # Supplied by the Page this is mixed into: json, connection and r are set in
+    # Page.__init__, next and previous come from the response body through
+    # Page.__getattr__, and get is Page's own. Annotations rather than
+    # assignments, so nothing is created at runtime.
+    json: dict
+    connection: Any
+    r: Any
+    next: str | None
+    previous: str | None
+    get: Callable[..., Any]
+
     NATURAL_KEY = None
 
     @property

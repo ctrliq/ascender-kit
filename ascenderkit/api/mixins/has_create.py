@@ -1,3 +1,5 @@
+from typing import Any
+
 from collections import defaultdict
 import inspect
 
@@ -201,6 +203,11 @@ except ImportError:
 
 
 class HasCreate(object):
+    # Supplied by the Page this is mixed into: response-body fields arrive
+    # through Page.__getattr__, the rest are Page's own. Annotations rather
+    # than assignments, so nothing is created at runtime.
+    connection: Any
+
     # For reference only.  Use self.ds, or self._dependency_store if mutating.
     dependencies = []
     optional_dependencies = []
