@@ -28,7 +28,7 @@ def log_elapsed(r, *args, **kwargs):  # requests hook to display API elapsed tim
 class Connection(object):
     """A requests.Session wrapper for establishing connection w/ Ascender instance"""
 
-    def __init__(self, server, verify=False):
+    def __init__(self, server, verify=True):
         self.server = server
         self.verify = verify
         # Note: We use the old sessionid here incase someone is trying to connect to an older Ascender version

@@ -30,7 +30,10 @@ if os.getenv('ASCENDERKIT_PROJECT_FILE'):
 # kludge to mimic pytest.config
 config.getvalue = types.MethodType(getvalue, config)
 
-config.assume_untrusted = config.get('assume_untrusted', True)
+# Verify server certificates unless told otherwise. Set ASCENDERKIT_ASSUME_UNTRUSTED
+# for an Ascender presenting a self-signed certificate, which is what the CLI's
+# -k / --conf.insecure flag does for a single invocation.
+config.assume_untrusted = config.get('assume_untrusted', to_bool(os.getenv('ASCENDERKIT_ASSUME_UNTRUSTED', False)))
 
 config.client_connection_attempts = int(os.getenv('ASCENDERKIT_CLIENT_CONNECTION_ATTEMPTS', 5))
 config.prevent_teardown = to_bool(os.getenv('ASCENDERKIT_PREVENT_TEARDOWN', False))

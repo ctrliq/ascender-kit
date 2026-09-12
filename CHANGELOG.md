@@ -8,6 +8,13 @@ and this project adheres to the versioning of
 
 ## [Unreleased]
 
+### Changed
+
+- TLS certificates are now verified by default. Set `ASCENDERKIT_ASSUME_UNTRUSTED`
+  to restore the previous behaviour when talking to an Ascender that presents a
+  self-signed certificate. The CLI is unaffected: it already verified unless given
+  `-k` / `--conf.insecure`.
+
 ## [25.6.2] - 2026-09-09
 
 ### Changed
