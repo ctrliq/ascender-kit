@@ -196,9 +196,9 @@ def test_filter_by_class_with_arg_tuples_containing_truthy(truthy):
 @pytest.mark.parametrize(
     'date_string,now,expected',
     [
-        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 2, 750000), 1.25),
-        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 1, 500000), 0.00),
-        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 0, 500000), -1.00),
+        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 2, 750000, tzinfo=timezone.utc), 1.25),
+        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 1, 500000, tzinfo=timezone.utc), 0.00),
+        ('2017-12-20T00:00:01.5Z', datetime(2017, 12, 20, 0, 0, 0, 500000, tzinfo=timezone.utc), -1.00),
     ],
 )
 def test_seconds_since_date_string(date_string, now, expected):

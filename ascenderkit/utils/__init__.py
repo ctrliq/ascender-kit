@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, tzinfo, timezone
+from datetime import datetime, timezone
 import inspect
 import logging
 import random
@@ -367,22 +367,7 @@ def utcnow():
     return datetime.now(timezone.utc)
 
 
-class UTC(tzinfo):
-    """Concrete implementation of tzinfo for UTC. For more information, see:
-    https://docs.python.org/2/library/datetime.html
-    """
-
-    def tzname(self, dt):
-        return 'UTC'
-
-    def dst(self, dt):
-        return timedelta(0)
-
-    def utcoffset(self, dt):
-        return timedelta(0)
-
-
-def seconds_since_date_string(date_str, fmt='%Y-%m-%dT%H:%M:%S.%fZ', default_tz=UTC()):
+def seconds_since_date_string(date_str, fmt='%Y-%m-%dT%H:%M:%S.%fZ', default_tz=timezone.utc):
     """Return the number of seconds since the date and time indicated by a date
     string and its corresponding format string.
 
@@ -399,7 +384,7 @@ def seconds_since_date_string(date_str, fmt='%Y-%m-%dT%H:%M:%S.%fZ', default_tz=
     if not parsed_datetime.tzinfo:
         parsed_datetime = parsed_datetime.replace(tzinfo=default_tz)
 
-    elapsed = utcnow().replace(tzinfo=UTC()) - parsed_datetime
+    elapsed = utcnow() - parsed_datetime
 
     return elapsed.total_seconds()
 
