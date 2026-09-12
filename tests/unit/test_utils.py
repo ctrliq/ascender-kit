@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timezone
+import re
 import sys
 
 from unittest import mock
@@ -82,13 +83,11 @@ def test_load_invalid_json_or_yaml(inp):
 
 
 @pytest.mark.parametrize('non_ascii', [True, False])
-@pytest.mark.skipif(sys.version_info < (3, 6), reason='this is only intended to be used in py3, not the CLI')
 def test_random_titles_are_unicode(non_ascii):
     assert isinstance(utils.random_title(non_ascii=non_ascii), str)
 
 
 @pytest.mark.parametrize('non_ascii', [True, False])
-@pytest.mark.skipif(sys.version_info < (3, 6), reason='this is only intended to be used in py3, not the CLI')
 def test_random_titles_generates_correct_characters(non_ascii):
     title = utils.random_title(non_ascii=non_ascii)
     if non_ascii:
@@ -98,6 +97,23 @@ def test_random_titles_generates_correct_characters(non_ascii):
     else:
         title.encode('ascii')
         title.encode('utf-8')
+
+
+def test_random_title_is_ascii_by_default():
+    """The default used to append a random BMP character, frequently U+FFFD."""
+    for _ in range(50):
+        utils.random_title().encode('ascii')
+
+
+@pytest.mark.parametrize('num_words', [1, 2, 5])
+def test_random_title_is_words_then_a_short_number(num_words):
+    """The ascii branch used to append three unbounded random_int() calls,
+    giving a suffix of about 57 digits."""
+    for _ in range(50):
+        title = utils.random_title(num_words)
+        match = re.fullmatch(r'([A-Za-z]+?)(\d{1,2})', title)
+        assert match, title
+        assert int(match.group(2)) <= 99
 
 
 @pytest.mark.parametrize(

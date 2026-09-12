@@ -273,16 +273,22 @@ def random_utf8(*args, **kwargs):
     return scrubbed
 
 
-def random_title(num_words=2, non_ascii=True):
-    base = ''.join([random.choice(words) for word in range(num_words)])
-    if os.getenv('ASCENDERKIT_FORCE_ONLY_ASCII', False):
-        title = ''.join([base, ''.join(str(random_int(99)))])
-    else:
-        if non_ascii:
-            title = ''.join([base, random_utf8(1)])
-        else:
-            title = ''.join([base, ''.join([str(random_int()) for _ in range(3)])])
-    return title
+def random_title(num_words=2, non_ascii=False):
+    """Generate a readable name: some nouns joined, plus a short numeric suffix.
+
+    :param num_words: how many nouns to join, two by default.
+    :param non_ascii: append a random non-ASCII character in place of the
+        number, for deliberately exercising the API's Unicode handling. Off by
+        default: the character frequently lands on U+FFFD, and a name carrying
+        one is rejected outright anywhere it has to be a username, an email
+        address, a filesystem path or an Ansible group.
+
+    :returns: a name such as `LifeResource42`.
+    """
+    base = ''.join([random.choice(words) for _ in range(num_words)])
+    if non_ascii:
+        return ''.join([base, random_utf8(1)])
+    return ''.join([base, str(random_int(99))])
 
 
 def update_payload(payload, fields, kwargs):

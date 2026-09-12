@@ -12,13 +12,13 @@ class User(HasCreate, base.Base):
 
     def payload(self, **kwargs):
         payload = PseudoNamespace(
-            username=kwargs.get('username') or 'User-{}'.format(random_title(non_ascii=False)),
+            username=kwargs.get('username') or 'User-{}'.format(random_title()),
             password=kwargs.get('password') or config.credentials.default.password,
             is_superuser=kwargs.get('is_superuser', False),
             is_system_auditor=kwargs.get('is_system_auditor', False),
             first_name=kwargs.get('first_name', random_title()),
             last_name=kwargs.get('last_name', random_title()),
-            email=kwargs.get('email', '{}@example.com'.format(random_title(5, non_ascii=False))),
+            email=kwargs.get('email', '{}@example.com'.format(random_title(5))),
         )
         return payload
 

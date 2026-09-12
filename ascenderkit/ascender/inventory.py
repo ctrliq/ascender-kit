@@ -9,11 +9,11 @@ def upload_inventory(ansible_runner, nhosts=10, ini=False):
     # Create an inventory script
     if ini:
         copy_mode = '0644'
-        copy_dest = '/tmp/inventory{}.ini'.format(random_title(non_ascii=False))
+        copy_dest = '/tmp/inventory{}.ini'.format(random_title())
         copy_content = ini_inventory(nhosts)
     else:
         copy_mode = '0755'
-        copy_dest = '/tmp/inventory{}.sh'.format(random_title(non_ascii=False))
+        copy_dest = '/tmp/inventory{}.sh'.format(random_title())
         copy_content = '''#!/bin/bash
 cat <<EOF
 %s

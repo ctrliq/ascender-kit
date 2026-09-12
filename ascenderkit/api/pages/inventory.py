@@ -161,7 +161,7 @@ class Group(HasCreate, HasVariables, base.Base):
 
     def payload(self, inventory, credential=None, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Group{}'.format(random_title(non_ascii=False)),
+            name=kwargs.get('name') or 'Group{}'.format(random_title()),
             description=kwargs.get('description') or random_title(10),
             inventory=inventory.id,
         )
@@ -242,7 +242,7 @@ class Host(HasCreate, HasVariables, base.Base):
 
     def payload(self, inventory, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Host{}'.format(random_title(non_ascii=False)),
+            name=kwargs.get('name') or 'Host{}'.format(random_title()),
             description=kwargs.get('description') or random_title(10),
             inventory=inventory.id,
         )
