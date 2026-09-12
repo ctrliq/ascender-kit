@@ -1,6 +1,7 @@
 import logging
 
 import requests
+import urllib3
 
 from ascenderkit import exceptions as exc
 from ascenderkit.config import config
@@ -37,7 +38,7 @@ class Connection(object):
         self.session_cookie_name = 'sessionid'
 
         if not self.verify:
-            requests.packages.urllib3.disable_warnings()
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         self.session = requests.Session()
         self.uses_session_cookie = False
