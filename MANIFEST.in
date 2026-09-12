@@ -1,4 +1,3 @@
-include requirements.txt
 include setup.py
 include VERSION
 include README.md
