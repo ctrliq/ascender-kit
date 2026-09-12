@@ -59,11 +59,13 @@ def main():
 
         global root
         root = api.Api()
-        if uses_sessions(root.connection):
-            config.use_sessions = True
-            root.load_session().get()
-        else:
-            root.load_authtoken().get()
+        if not uses_sessions(root.connection):
+            raise exceptions.UnexpectedAscenderState(
+                'no session login',
+                '{}login/ did not answer 200. The authtoken endpoint this used to fall back to no longer exists on the platform.'.format(config.api_base_path),
+            )
+        config.use_sessions = True
+        root.load_session().get()
 
         if 'v2' in root.available_versions:
             global v2

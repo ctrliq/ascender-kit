@@ -4,7 +4,6 @@ from .base import *  # NOQA
 from .bulk import *  # NOQA
 from .access_list import *  # NOQA
 from .api import *  # NOQA
-from .authtoken import *  # NOQA
 from .roles import *  # NOQA
 from .organizations import *  # NOQA
 from .notifications import *  # NOQA

@@ -3,9 +3,8 @@ import logging
 
 from requests.auth import HTTPBasicAuth
 
-from ascenderkit.api.pages import Page, get_registered_page, exception_from_status_code
+from ascenderkit.api.pages import Page, exception_from_status_code
 from ascenderkit.config import config
-from ascenderkit.api.resources import resources
 import ascenderkit.exceptions as exc
 
 log = logging.getLogger(__name__)
@@ -127,18 +126,6 @@ class Base(Page):
         url = self.get().json.related.object_roles
         for obj_role in Roles(self.connection, endpoint=url).get().json.results:
             yield Role(self.connection, endpoint=obj_role.url).get()
-
-    def get_authtoken(self, username='', password=''):
-        default_cred = config.credentials.default
-        payload = dict(username=username or default_cred.username, password=password or default_cred.password)
-        auth_url = resources.authtoken
-        return get_registered_page(auth_url)(self.connection, endpoint=auth_url).post(payload).token
-
-    def load_authtoken(self, username='', password=''):
-        self.connection.login(token=self.get_authtoken(username, password))
-        return self
-
-    load_default_authtoken = load_authtoken
 
     def get_oauth2_token(self, username='', password='', client_id=None, description='Ascender CLI', client_secret=None, scope='write'):
         default_cred = config.credentials.default
