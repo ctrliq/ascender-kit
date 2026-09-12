@@ -6,7 +6,35 @@ build-backend = "setuptools.build_meta"
 # setuptools_scm derives the version from git tags otherwise. Deliberately no
 # [tool.setuptools_scm] section here, so the VERSION file override keeps working.
 
-[tool.black]
+[tool.ruff]
+# Ported from the [flake8] block in tox.ini rather than adopted from elsewhere:
+# the selection below is the same 16 rules that block chose, verified one by one
+# against what Ruff implements.
 line-length = 160
-fast = true
-skip-string-normalization = true
+exclude = [".git", "__pycache__", ".tox", "build", "dist", "env", "venv"]
+
+# Matches python_requires in setup.py. Left unset, Ruff assumes py39, which is
+# three releases below the floor this package declares. It is not only a lint
+# setting: the formatter reads it too, so an unset value means both halves are
+# targeting a Python nobody runs this on.
+target-version = "py311"
+
+[tool.ruff.format]
+# The one setting black was configured with beyond the line length: preserving
+# quotes rather than normalising them, which is skip-string-normalization.
+quote-style = "preserve"
+
+[tool.ruff.lint]
+# E265 and E266 are preview rules in Ruff 0.16. Without this they are accepted
+# and then silently do nothing, which Ruff reports on stderr as "Selection
+# `E265` has no effect because preview is not enabled". The selection below is
+# explicit, so preview pulls in nothing unasked for: it only makes those two
+# run. Drop this once they are stabilised.
+preview = true
+
+select = [
+    "E265", "E266", "E722",
+    "F401", "F402", "F405", "F523", "F541", "F632",
+    "F811", "F821", "F822", "F823", "F841",
+    "W291", "W605",
+]

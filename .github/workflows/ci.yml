@@ -31,14 +31,14 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install linters
-        run: pip install black==26.5.1 flake8==7.3.0
+      - name: Install ruff
+        run: pip install ruff==0.16.6
 
       - name: Check formatting
-        run: black --check --diff ascenderkit tests setup.py
+        run: ruff format --check --diff ascenderkit tests setup.py
 
-      - name: Run flake8
-        run: flake8 ascenderkit
+      - name: Run the linter
+        run: ruff check ascenderkit
 
   test:
     name: Test (Python ${{ matrix.python }})
