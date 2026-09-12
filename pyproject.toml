@@ -10,3 +10,13 @@ build-backend = "setuptools.build_meta"
 line-length = 160
 fast = true
 skip-string-normalization = true
+
+[tool.pytest.ini_options]
+# Moved here from a [pytest] section in tox.ini. pytest reads both, and this is
+# the file the rest of the tooling configuration already lives in.
+addopts = "-v --tb=native"
+junit_family = "xunit2"
+testpaths = ["tests/unit"]
+markers = [
+    "integration: needs a running Ascender; selected by pointing CONTROLLER_HOST at one",
+]
