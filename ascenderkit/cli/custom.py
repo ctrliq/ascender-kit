@@ -17,6 +17,10 @@ def handle_custom_actions(resource, action, page):
 
 
 class CustomActionRegistryMeta(CustomRegistryMeta):
+    # Read off the subclass, which declares both as plain class attributes.
+    resource: str
+    action: str
+
     @property
     def name(self):
         return ' '.join([self.resource, self.action])
@@ -28,13 +32,10 @@ class CustomAction(metaclass=CustomActionRegistryMeta):
     def __init__(self, page):
         self.page = page
 
-    @property
-    def action(self):
-        raise NotImplementedError()
-
-    @property
-    def resource(self):
-        raise NotImplementedError()
+    # Set as plain class attributes by every subclass, so they are declared
+    # here rather than raised from a property that nothing ever reaches.
+    action: str
+    resource: str
 
     @property
     def perform(self):
@@ -45,6 +46,13 @@ class CustomAction(metaclass=CustomActionRegistryMeta):
 
 
 class Launchable(object):
+    # Supplied by the CustomAction this is mixed into, which is why they are
+    # annotations rather than assignments: they describe the contract without
+    # creating class attributes that would shadow the real ones.
+    page: 'api.pages.Page'
+    action: str
+    resource: str
+
     @property
     def options_endpoint(self):
         return self.page.endpoint + '1/{}/'.format(self.action)
@@ -112,8 +120,8 @@ class BulkJobLaunch(Launchable, CustomAction):
     def options_endpoint(self):
         return self.page.endpoint + '{}/'.format(self.action)
 
-    def add_arguments(self, parser, resource_options_parser):
-        Launchable.add_arguments(self, parser, resource_options_parser, with_pk=False)
+    def add_arguments(self, parser, resource_options_parser, with_pk=False):
+        Launchable.add_arguments(self, parser, resource_options_parser, with_pk=with_pk)
 
     def perform(self, **kwargs):
         monitor_kwargs = {
@@ -202,8 +210,8 @@ class AdhocCommandLaunch(Launchable, CustomAction):
     action = 'create'
     resource = 'ad_hoc_commands'
 
-    def add_arguments(self, parser, resource_options_parser):
-        Launchable.add_arguments(self, parser, resource_options_parser, with_pk=False)
+    def add_arguments(self, parser, resource_options_parser, with_pk=False):
+        Launchable.add_arguments(self, parser, resource_options_parser, with_pk=with_pk)
 
     def perform(self, **kwargs):
         monitor_kwargs = {
@@ -224,6 +232,13 @@ class WorkflowLaunch(Launchable, CustomAction):
 
 
 class HasStdout(object):
+    # Supplied by the CustomAction this is mixed into, which is why they are
+    # annotations rather than assignments: they describe the contract without
+    # creating class attributes that would shadow the real ones.
+    page: 'api.pages.Page'
+    action: str
+    resource: str
+
     action = 'stdout'
 
     def add_arguments(self, parser, resource_options_parser):
@@ -255,6 +270,13 @@ class AdhocCommandStdout(HasStdout, CustomAction):
 
 
 class AssociationMixin(object):
+    # Supplied by the CustomAction this is mixed into, and by the subclass for
+    # targets. Annotations rather than assignments: they describe the contract
+    # without creating class attributes that would shadow the real ones.
+    page: 'api.pages.Page'
+    resource: str
+    targets: dict
+
     action = 'associate'
 
     def add_arguments(self, parser, resource_options_parser):
@@ -304,7 +326,10 @@ class AssociationMixin(object):
 
 
 class NotificationAssociateMixin(AssociationMixin):
-    targets = {
+    # The second element is None for the targets that carry no nested type, so
+    # the value is list[str | None] rather than the list[str] a checker infers
+    # from the three literals below.
+    targets: dict[str, list[str | None]] = {
         'start_notification': ['notification_templates_started', 'notification_template'],
         'success_notification': ['notification_templates_success', 'notification_template'],
         'failure_notification': ['notification_templates_error', 'notification_template'],
@@ -314,13 +339,13 @@ class NotificationAssociateMixin(AssociationMixin):
 class JobTemplateNotificationAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'job_templates'
     action = 'associate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 class JobTemplateNotificationDisAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'job_templates'
     action = 'disassociate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 JobTemplateNotificationAssociation.targets.update(
@@ -338,13 +363,13 @@ JobTemplateNotificationDisAssociation.targets.update(
 class WorkflowJobTemplateNotificationAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'workflow_job_templates'
     action = 'associate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 class WorkflowJobTemplateNotificationDisAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'workflow_job_templates'
     action = 'disassociate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 WorkflowJobTemplateNotificationAssociation.targets.update(
@@ -382,13 +407,13 @@ class InventorySourceNotificationDisAssociation(NotificationAssociateMixin, Cust
 class OrganizationNotificationAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'organizations'
     action = 'associate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 class OrganizationNotificationDisAssociation(NotificationAssociateMixin, CustomAction):
     resource = 'organizations'
     action = 'disassociate'
-    targets = NotificationAssociateMixin.targets.copy()
+    targets: dict[str, list[str | None]] = NotificationAssociateMixin.targets.copy()
 
 
 OrganizationNotificationAssociation.targets.update(
@@ -418,6 +443,13 @@ class SettingsList(CustomAction):
 
 
 class RoleMixin(object):
+    # Supplied by the CustomAction this is mixed into, which is why they are
+    # annotations rather than assignments: they describe the contract without
+    # creating class attributes that would shadow the real ones.
+    page: 'api.pages.Page'
+    action: str
+    resource: str
+
     has_roles = [
         ['organizations', 'organization'],
         ['projects', 'project'],
@@ -551,6 +583,13 @@ class SettingsModify(CustomAction):
 
 
 class HasMonitor(object):
+    # Supplied by the CustomAction this is mixed into, which is why they are
+    # annotations rather than assignments: they describe the contract without
+    # creating class attributes that would shadow the real ones.
+    page: 'api.pages.Page'
+    action: str
+    resource: str
+
     action = 'monitor'
 
     def add_arguments(self, parser, resource_options_parser):
