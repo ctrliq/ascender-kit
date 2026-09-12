@@ -45,10 +45,6 @@ def super_dir_set(cls):
     return attrs
 
 
-class NoReloadError(Exception):
-    pass
-
-
 class PseudoNamespace(dict):
     def __init__(self, _d=None, **loaded):
         if not isinstance(_d, dict):
@@ -244,21 +240,6 @@ def gen_utf_char():
 def random_int(maxint=sys.maxsize):
     max = int(maxint)
     return random.randint(0, max)
-
-
-def random_ipv4():
-    """Generates a random ipv4 address;; useful for testing."""
-    return ".".join(str(random.randint(1, 255)) for i in range(4))
-
-
-def random_ipv6():
-    """Generates a random ipv6 address;; useful for testing."""
-    return ':'.join('{0:x}'.format(random.randint(0, 2**16 - 1)) for i in range(8))
-
-
-def random_loopback_ip():
-    """Generates a random loopback ipv4 address;; useful for testing."""
-    return "127.{}.{}.{}".format(random_int(255), random_int(255), random_int(255))
 
 
 def random_utf8(*args, **kwargs):
