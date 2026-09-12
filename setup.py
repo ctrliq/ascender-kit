@@ -113,7 +113,15 @@ setup(
         'urllib3',
     ],
     python_requires=">=3.11",
-    extras_require={'formatting': ['jq'], 'websockets': ['websocket-client>=1.0.0'], 'crypto': ['cryptography']},
+    extras_require={
+        'formatting': ['jq'],
+        'websockets': ['websocket-client>=1.0.0'],
+        'crypto': ['cryptography'],
+        # ascenderkit/cli/sphinx.py is a Sphinx extension shipped inside the
+        # package, and it imports all three. docutils arrives with sphinx
+        # today, but sphinx.py imports it by name, so it is declared.
+        'docs': ['sphinx', 'sphinxcontrib-autoprogram', 'docutils'],
+    },
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
