@@ -8,6 +8,13 @@ and this project adheres to the versioning of
 
 ## [Unreleased]
 
+### Fixed
+
+- `WSClient` now verifies the server certificate, following the same
+  configuration as the HTTP connection, instead of always sending
+  `ssl.CERT_NONE`. Pass `verify=False` for a server presenting a self-signed
+  certificate.
+
 ## [25.6.2] - 2026-09-09
 
 ### Changed

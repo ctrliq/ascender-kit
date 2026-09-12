@@ -22,6 +22,24 @@ def test_websocket_suffix():
     assert client.suffix == 'my-websocket/'
 
 
+@pytest.mark.parametrize('assume_untrusted, expected', [[False, True], [True, False]])
+def test_verify_follows_the_config_by_default(assume_untrusted, expected):
+    """The websocket used to hardcode ssl.CERT_NONE, ignoring the config the
+    HTTP connection reads."""
+    with patch("ascenderkit.ws.config") as mock_config:
+        mock_config.assume_untrusted = assume_untrusted
+        client = WSClient("token", "hostname", 566, True)
+    assert client.verify is expected
+
+
+@pytest.mark.parametrize('verify', [True, False])
+def test_verify_can_be_passed_explicitly(verify):
+    with patch("ascenderkit.ws.config") as mock_config:
+        mock_config.assume_untrusted = not verify
+        client = WSClient("token", "hostname", 566, True, verify=verify)
+    assert client.verify is verify
+
+
 @pytest.mark.parametrize(
     'url, result',
     [

@@ -62,6 +62,7 @@ class WSClient(object):
         # Server-side value, not a brand reference: this must stay in step with
         # SESSION_COOKIE_NAME in awx/settings/defaults.py over in ctrliq/ascender.
         session_cookie_name='awx_sessionid',
+        verify=None,
     ):
         # delay this import, because this is an optional dependency
         import websocket
@@ -104,9 +105,15 @@ class WSClient(object):
         self._should_subscribe_to_pending_job = False
         self._pending_unsubscribe = threading.Event()
         self._add_received_time = add_received_time
+        # Verify the server certificate unless told otherwise, which is what the
+        # HTTP connection does. Passing verify explicitly overrides the config.
+        self.verify = (not config.assume_untrusted) if verify is None else verify
 
     def connect(self):
-        wst = threading.Thread(target=self._ws_run_forever, args=({"cert_reqs": ssl.CERT_NONE},))
+        # No sslopt at all when verifying, so websocket-client applies its own
+        # defaults, which check the chain and the hostname.
+        sslopt = None if self.verify else {"cert_reqs": ssl.CERT_NONE, "check_hostname": False}
+        wst = threading.Thread(target=self._ws_run_forever, args=(sslopt,))
         wst.daemon = True
         wst.start()
         atexit.register(self.close)
