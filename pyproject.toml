@@ -6,6 +6,68 @@ build-backend = "setuptools.build_meta"
 # setuptools_scm derives the version from git tags otherwise. Deliberately no
 # [tool.setuptools_scm] section here, so the VERSION file override keeps working.
 
+[project]
+name = "ascender-kit"
+description = "The official command line interface for Ascender Automation"
+readme = "README.md"
+# Two entries rather than one: a combined { name, email } renders as a single
+# "Author-email: Ascender Project Contributors <info@ctrliq.com>" header, where
+# setup.py produced separate Author and Author-email fields. This keeps the
+# metadata identical.
+authors = [{ name = "Ascender Project Contributors" }, { email = "info@ctrliq.com" }]
+# SPDX expression rather than a "License :: OSI Approved ::" classifier, which
+# setuptools deprecated and warns about on every build.
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+# Supplied by setup.py, see the note above.
+dynamic = ["version"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Software Distribution",
+    "Topic :: System :: Systems Administration",
+]
+dependencies = [
+    # packaging backs ascenderkit.ascender.version_cmp, which __init__ imports
+    # unconditionally, so it is needed for `import ascenderkit`.
+    "packaging",
+    "PyYAML",
+    "requests",
+    # Imported directly by the CLI to silence insecure-request warnings. It
+    # arrives with requests today, but relying on that is fragile.
+    "urllib3",
+]
+
+[project.optional-dependencies]
+formatting = ["jq"]
+websockets = ["websocket-client>=1.0.0"]
+crypto = ["cryptography"]
+
+[project.urls]
+Homepage = "https://ascender-automation.org"
+Source = "https://github.com/ctrliq/ascender-kit"
+Issues = "https://github.com/ctrliq/ascender-kit/issues"
+
+[project.scripts]
+ascender = "ascenderkit.cli:run"
+ascender-shell = "ascenderkit.scripts.basic_session:load_interactive"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["tests*"]
+
 [tool.black]
 line-length = 160
 fast = true
