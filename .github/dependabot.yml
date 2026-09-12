@@ -1,7 +1,16 @@
 ---
+# Security updates arrive without this file; what it adds is version updates.
+#
+# Both ecosystems in this repository are safe to bump on their own: the
+# workflows pin every uses: to a SHA, and the runtime dependencies are a short
+# hand-maintained list with no compiled lockfile behind them.
+#
+# No groups: key on purpose, so every dependency comes as its own pull request.
 version: 2
 updates:
   - package-ecosystem: github-actions
+    # every uses: is pinned to a SHA, and Dependabot keeps the version comment
+    # next to it in step
     directory: /
     schedule:
       interval: weekly
@@ -13,6 +22,8 @@ updates:
       - ci
 
   - package-ecosystem: pip
+    # the install_requires and extras_require lists, which Dependabot reads
+    # straight out of setup.py
     directory: /
     schedule:
       interval: weekly
@@ -21,3 +32,4 @@ updates:
       prefix: "build"
     labels:
       - dependencies
+      - build
