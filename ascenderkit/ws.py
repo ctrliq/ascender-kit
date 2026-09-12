@@ -101,7 +101,9 @@ class WSClient(object):
             url, on_open=self._on_open, on_message=self._on_message, on_error=self._on_error, on_close=self._on_close, cookie=auth_cookie
         )
         self._message_cache = []
-        self._should_subscribe_to_pending_job = False
+        # None rather than False: this holds a dict once a pending subscription is
+        # queued, and the sentinel only ever has to be falsy.
+        self._should_subscribe_to_pending_job: dict | None = None
         self._pending_unsubscribe = threading.Event()
         self._add_received_time = add_received_time
 
@@ -212,9 +214,12 @@ class WSClient(object):
         if self._add_received_time:
             message['received_time'] = datetime.now(timezone.utc)
 
-        if all([message.get('group_name') == 'jobs', message.get('status') == 'pending', message.get('unified_job_id'), self._should_subscribe_to_pending_job]):
-            if bool(message.get('project_id')) == (self._should_subscribe_to_pending_job['events'] == 'project_update_events'):
-                self._update_subscription(message['unified_job_id'])
+        # Bound once so the rest of the block can rely on it, which all([...]) of
+        # four unrelated conditions did not make obvious.
+        pending = self._should_subscribe_to_pending_job
+        if pending and message.get('group_name') == 'jobs' and message.get('status') == 'pending' and message.get('unified_job_id'):
+            if bool(message.get('project_id')) == (pending['events'] == 'project_update_events'):
+                self._update_subscription(pending, message['unified_job_id'])
 
         ret = self._recv_queue.put(message)
 
@@ -224,12 +229,12 @@ class WSClient(object):
 
         return ret
 
-    def _update_subscription(self, job_id):
-        subscription = dict(jobs=self._should_subscribe_to_pending_job['jobs'])
-        events = self._should_subscribe_to_pending_job['events']
+    def _update_subscription(self, pending, job_id):
+        subscription = dict(jobs=pending['jobs'])
+        events = pending['events']
         subscription[events] = [job_id]
         self.subscribe(**subscription)
-        self._should_subscribe_to_pending_job = False
+        self._should_subscribe_to_pending_job = None
 
     def _on_open(self, ws):
         self._ws_connected_flag.set()
