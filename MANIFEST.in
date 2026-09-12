@@ -1,8 +1,11 @@
-include requirements.txt
 include setup.py
+# Kept even though the file is not in the tree: setup.py prefers a VERSION file
+# over setuptools_scm when one is present, so an sdist built from a tree that
+# has one has to carry it. Costs one "no files found" warning when it is absent.
 include VERSION
+include requirements.txt
 include README.md
 include LICENSE
 include NOTICE.txt
-recursive-include ascenderkit *.py *.yml *.md *.rst
-recursive-include tests *.py *.yml *.md
+recursive-include ascenderkit *.py *.md *.rst
+recursive-include tests *.py
