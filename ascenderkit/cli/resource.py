@@ -205,7 +205,7 @@ def parse_resource(client, skip_deprecated=False):
                 #    CustomCommand section above
                 continue
 
-            # argparse aliases are *only* supported in Python3 (not 2.7)
+            # A deprecated resource keeps its old name reachable as an argparse alias.
             kwargs = {}
             if not skip_deprecated:
                 if k in DEPRECATED_RESOURCES:

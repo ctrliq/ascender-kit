@@ -392,7 +392,7 @@ def seconds_since_date_string(date_str, fmt='%Y-%m-%dT%H:%M:%S.%fZ', default_tz=
     :param default_tz: Assumed tzinfo if the parsed date_str does not include tzinfo
 
     For more information on python date string formatting directives, see
-        https://docs.python.org/2/library/datetime.httpsml#strftime-strptime-behavior
+        https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
     """
     parsed_datetime = datetime.strptime(date_str, fmt)
 
