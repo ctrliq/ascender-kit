@@ -12,6 +12,14 @@ if str(os.getenv('ASCENDERKIT_DEBUG', 'false')).lower() in ['true', '1']:
     logging.basicConfig(level='DEBUG')
 
 
+# main() assigns these with `global` so the interactive shell has them at the
+# prompt. Declared here so the module states what it exposes, rather than
+# growing the names at call time.
+session_args = None
+root = None
+v2 = None
+
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
