@@ -1,4 +1,3 @@
-import types
 import os
 
 from .utils import (
@@ -9,10 +8,6 @@ from .utils import (
 )
 
 config = PseudoNamespace()
-
-
-def getvalue(self, name):
-    return self.__getitem__(name)
 
 
 if os.getenv('ASCENDERKIT_BASE_URL'):
@@ -26,9 +21,6 @@ if os.getenv('ASCENDERKIT_PROJECT_FILE'):
     # from `config` instead handed load_projects a None it treats as "no file",
     # so the one named here was never opened.
     config.project_urls = load_projects(os.getenv('ASCENDERKIT_PROJECT_FILE'))
-
-# kludge to mimic pytest.config
-config.getvalue = types.MethodType(getvalue, config)
 
 config.assume_untrusted = config.get('assume_untrusted', True)
 
