@@ -77,4 +77,18 @@ def setup(app):
     app.add_directive('autoprogram', CustomAutoprogramDirective)
 
 
-parser = render()
+def __getattr__(name):
+    """Build the parser on first access rather than at import time.
+
+    `reference.rst` names this module's `parser` attribute, and
+    sphinxcontrib.autoprogram resolves that with getattr, which PEP 562 routes
+    here. So the HTTP work `render()` does happens when that directive runs
+    rather than when Sphinx loads the extension, and importing this module no
+    longer requires a running Ascender. The result is cached in the module
+    namespace, so the second access does not reach this function at all.
+    """
+    if name == 'parser':
+        global parser
+        parser = render()
+        return parser
+    raise AttributeError('module {!r} has no attribute {!r}'.format(__name__, name))
