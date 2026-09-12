@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from requests.auth import AuthBase
 
 from ascenderkit import exceptions as exc
 from ascenderkit.config import config
@@ -12,7 +13,7 @@ class ConnectionException(exc.Common):
     pass
 
 
-class Token_Auth(requests.auth.AuthBase):
+class Token_Auth(AuthBase):
     def __init__(self, token):
         self.token = token
 

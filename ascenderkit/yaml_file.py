@@ -1,5 +1,6 @@
 import os
 import yaml
+from yaml.constructor import ConstructorError
 import glob
 import logging
 
@@ -35,7 +36,7 @@ class Loader(yaml.SafeLoader):
 
         else:
             log.error("unrecognised node type in !include statement")
-            raise yaml.constructor.ConstructorError
+            raise ConstructorError
 
     def extractFile(self, filename):
         file_pattern = os.path.join(self._root, filename)
