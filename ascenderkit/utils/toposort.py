@@ -1,52 +1,24 @@
-#######################################################################
-# Implements a topological sort algorithm.
-#
-# Copyright 2014 True Blade Systems, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Notes:
-#  Based on http://code.activestate.com/recipes/578272-topological-sort
-#   with these major changes:
-#    Added unittests.
-#    Deleted doctests (maybe not the best idea in the world, but it cleans
-#     up the docstring).
-#    Moved functools import to the top of the file.
-#    Changed assert to a ValueError.
-#    Changed iter[items|keys] to [items|keys], for python 3
-#     compatibility. I don't think it matters for python 2 these are
-#     now lists instead of iterables.
-#    Copy the input so as to leave it unmodified.
-#    Renamed function from toposort2 to toposort.
-#    Handle empty input.
-#    Switch tests to use set literals.
-#
-########################################################################
+"""Topological sort, backed by the standard library's `graphlib`.
 
-from functools import reduce as _reduce
+`has_create.creation_order` consumes the batched form this returns: a list of
+sets, where every item in a set can be created once the preceding sets exist.
+"""
+
+from graphlib import CycleError, TopologicalSorter
 
 __all__ = ['toposort', 'CircularDependencyError']
 
 
 class CircularDependencyError(ValueError):
-    def __init__(self, data):
-        # Sort the data just to make the output consistent, for use in
-        #  error messages.  That's convenient for doctests.
-        s = 'Circular dependencies exist among these items: {{{}}}'.format(
-            ', '.join('{!r}:{!r}'.format(key, value) for key, value in sorted(data.items()))
-        )  # noqa
-        super(CircularDependencyError, self).__init__(s)
-        self.data = data
+    """Raised when the dependency graph cannot be ordered.
+
+    :param cycle: the nodes `graphlib` found in the cycle, first node repeated
+        last, which is the shape `CycleError` reports.
+    """
+
+    def __init__(self, cycle):
+        super().__init__('Circular dependencies exist among these items: {}'.format(' -> '.join(repr(node) for node in cycle)))
+        self.data = cycle
 
 
 def toposort(data):
@@ -55,26 +27,18 @@ def toposort(data):
     sets in topological order. The first set consists of items with no
     dependences, each subsequent set consists of items that depend upon
     items in the preceding sets."""
+    # Self dependencies are dropped rather than reported. graphlib treats an
+    # item depending on itself as a one-node cycle, where a page listing itself
+    # among its own dependencies is meaningless rather than an error.
+    graph = {item: set(dependencies) - {item} for item, dependencies in data.items()}
 
-    # Special case empty input.
-    if len(data) == 0:
-        return
+    sorter = TopologicalSorter(graph)
+    try:
+        sorter.prepare()
+    except CycleError as e:
+        raise CircularDependencyError(e.args[1]) from None
 
-    # Copy the input so as to leave it unmodified.
-    data = data.copy()
-
-    # Ignore self dependencies.
-    for k, v in data.items():
-        v.discard(k)
-    # Find all items that don't depend on anything.
-    extra_items_in_deps = _reduce(set.union, data.values()) - set(data.keys())
-    # Add empty dependences where needed.
-    data.update({item: set() for item in extra_items_in_deps})
-    while True:
-        ordered = set(item for item, dep in data.items() if len(dep) == 0)
-        if not ordered:
-            break
-        yield ordered
-        data = {item: (dep - ordered) for item, dep in data.items() if item not in ordered}
-    if len(data) != 0:
-        raise CircularDependencyError(data)
+    while sorter.is_active():
+        group = sorter.get_ready()
+        yield set(group)
+        sorter.done(*group)
