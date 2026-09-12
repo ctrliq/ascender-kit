@@ -35,7 +35,7 @@ def generate_inventory(nhosts=100):
     }
 
     for n in range(nhosts):
-        hostname = 'host-%08d.example.com' % n
+        hostname = f'host-{n:08d}.example.com'
         group_evens_odds = 'evens.example.com' if n % 2 == 0 else 'odds.example.com'
         group_threes = 'threes.example.com' if n % 3 == 0 else ''
         group_fours = 'fours.example.com' if n % 4 == 0 else ''
@@ -45,9 +45,12 @@ def generate_inventory(nhosts=100):
         group_eights = 'eights.example.com' if n % 8 == 0 else ''
         group_nines = 'nines.example.com' if n % 9 == 0 else ''
         group_tens = 'tens.example.com' if n % 10 == 0 else ''
-        group_by_10s = 'group-%07dX.example.com' % (n / 10)
-        group_by_100s = 'group-%06dXX.example.com' % (n / 100)
-        group_by_1000s = 'group-%05dXXX.example.com' % (n / 1000)
+        # Integer division: these were true division, which made the argument a
+        # float that %d truncated. The result is the same for the non-negative n
+        # range() produces, and the value is now the integer the format says.
+        group_by_10s = f'group-{n // 10:07d}X.example.com'
+        group_by_100s = f'group-{n // 100:06d}XX.example.com'
+        group_by_1000s = f'group-{n // 1000:05d}XXX.example.com'
         for group in [group_evens_odds, group_threes, group_fours, group_fives, group_sixes, group_sevens, group_eights, group_nines, group_tens, group_by_10s]:
             if not group:
                 continue
