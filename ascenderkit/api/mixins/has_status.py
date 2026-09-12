@@ -51,11 +51,11 @@ class HasStatus(object):
         if getattr(self, 'result_stdout', ''):
             output = bytes_to_str(self.result_stdout)
             if output:
-                msg = '\nstdout:\n{}'.format(output)
+                msg = f'\nstdout:\n{output}'
         if getattr(self, 'job_explanation', ''):
-            msg += '\njob_explanation: {}'.format(bytes_to_str(self.job_explanation))
+            msg += f'\njob_explanation: {bytes_to_str(self.job_explanation)}'
         if getattr(self, 'result_traceback', ''):
-            msg += '\nresult_traceback:\n{}'.format(bytes_to_str(self.result_traceback))
+            msg += f'\nresult_traceback:\n{bytes_to_str(self.result_traceback)}'
         return msg
 
     def assert_status(self, status_list, msg=None):
@@ -69,9 +69,9 @@ class HasStatus(object):
             msg = ''
         else:
             msg += '\n'
-        msg += '{0}-{1} has status of {2}, which is not in {3}.'.format(self.type.title(), self.id, self.status, status_list)
+        msg += f'{self.type.title()}-{self.id} has status of {self.status}, which is not in {status_list}.'
         if getattr(self, 'execution_environment', ''):
-            msg += '\nexecution_environment: {}'.format(bytes_to_str(self.execution_environment))
+            msg += f'\nexecution_environment: {bytes_to_str(self.execution_environment)}'
             if getattr(self, 'related', False):
                 ee = self.related.execution_environment.get()
                 msg += f'\nee_image: {ee.image}'
@@ -86,13 +86,13 @@ class HasStatus(object):
                 data = json.loads(self.job_explanation.replace('Previous Task Failed: ', ''))
                 dependency = self.walk('/{0}v2/{1}s/{2}/'.format(config.api_base_path, data['job_type'], data['job_id']))
                 if hasattr(dependency, 'failure_output_details'):
-                    msg += '\nDependency output:\n{}'.format(dependency.failure_output_details())
+                    msg += f'\nDependency output:\n{dependency.failure_output_details()}'
                 else:
-                    msg += '\nDependency info:\n{}'.format(dependency)
+                    msg += f'\nDependency info:\n{dependency}'
             except Exception as e:
-                msg += '\nFailed to obtain dependency stdout: {}'.format(e)
+                msg += f'\nFailed to obtain dependency stdout: {e}'
 
-        msg += '\nTIME WHEN STATUS WAS FOUND: {} (UTC)\n'.format(datetime.now(timezone.utc))
+        msg += f'\nTIME WHEN STATUS WAS FOUND: {datetime.now(timezone.utc)} (UTC)\n'
 
         raise AssertionError(msg)
 

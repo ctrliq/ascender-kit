@@ -45,9 +45,7 @@ class Organization(HasCreate, HasInstanceGroups, HasNotifications, base.Base):
             )
 
     def payload(self, **kwargs):
-        payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Organization - {}'.format(random_title()), description=kwargs.get('description') or random_title(10)
-        )
+        payload = PseudoNamespace(name=kwargs.get('name') or f'Organization - {random_title()}', description=kwargs.get('description') or random_title(10))
 
         payload = set_payload_foreign_key_args(payload, ('default_environment',), kwargs)
 

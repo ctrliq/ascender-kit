@@ -39,7 +39,7 @@ class JobTemplate(HasCopy, HasCreate, HasInstanceGroups, HasNotifications, HasSu
             raise RuntimeError('Unexpected type of job template spawned job.')
 
     def payload(self, job_type='run', playbook='ping.yml', **kwargs):
-        name = kwargs.get('name') or 'JobTemplate - {}'.format(random_title())
+        name = kwargs.get('name') or f'JobTemplate - {random_title()}'
         description = kwargs.get('description') or random_title(10)
         payload = PseudoNamespace(name=name, description=description, job_type=job_type)
 

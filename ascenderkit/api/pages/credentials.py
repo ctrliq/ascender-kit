@@ -150,7 +150,7 @@ class CredentialType(HasCreate, base.Base):
 
     def payload(self, kind='cloud', **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'CredentialType - {}'.format(random_title()), description=kwargs.get('description') or random_title(10), kind=kind
+            name=kwargs.get('name') or f'CredentialType - {random_title()}', description=kwargs.get('description') or random_title(10), kind=kind
         )
         fields = ('inputs', 'injectors')
         update_payload(payload, fields, kwargs)
@@ -194,13 +194,13 @@ class Credential(HasCopy, HasCreate, base.Base):
 
     def payload(self, credential_type, user=None, team=None, organization=None, inputs=None, **kwargs):
         if not any((user, team, organization)):
-            raise TypeError('{0.__class__.__name__} requires user, team, and/or organization instances.'.format(self))
+            raise TypeError(f'{self.__class__.__name__} requires user, team, and/or organization instances.')
 
         if inputs is None:
             inputs = {}
 
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Credential - {}'.format(random_title()),
+            name=kwargs.get('name') or f'Credential - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             credential_type=credential_type.id,
             inputs=inputs,

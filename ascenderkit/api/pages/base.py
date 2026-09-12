@@ -52,11 +52,11 @@ class Base(Page):
                 if obj_role.name.lower() == role.lower():
                     return obj_role
 
-            raise Exception("Role '{0}' not found for {1.endpoint}".format(role, self))
+            raise Exception(f"Role '{role}' not found for {self.endpoint}")
 
         object_roles = self.get_related('object_roles', role_field=role)
         if not object_roles.count == 1:
-            raise Exception("No role with role_field '{0}' found.".format(role))
+            raise Exception(f"No role with role_field '{role}' found.")
         return object_roles.results[0]
 
     def set_object_roles(self, agent, *role_names, **kw):
@@ -89,10 +89,10 @@ class Base(Page):
         disassociate = kw.get('disassociate', False)
 
         if not any([isinstance(agent, agent_type) for agent_type in (User, Team)]):
-            raise ValueError('Invalid agent type {0.__class__.__name__}'.format(agent))
+            raise ValueError(f'Invalid agent type {agent.__class__.__name__}')
 
         if endpoint not in ('related_users', 'related_roles'):
-            raise ValueError('Invalid role association endpoint: {0}'.format(endpoint))
+            raise ValueError(f'Invalid role association endpoint: {endpoint}')
 
         object_roles = [self.get_object_role(name, by_name=True) for name in role_names]
         payload = {}
@@ -104,7 +104,7 @@ class Base(Page):
                 elif isinstance(agent, Team):
                     endpoint_model = role.related.teams
                 else:
-                    raise RuntimeError("Unhandled type for agent: {0.__class__.__name__}.".format(agent))
+                    raise RuntimeError(f"Unhandled type for agent: {agent.__class__.__name__}.")
             elif endpoint == 'related_roles':
                 payload['id'] = role.id
                 endpoint_model = agent.related.roles
@@ -163,7 +163,7 @@ class Base(Page):
         else:
             HTTPBasicAuth(username, password)(req)
             resp = self.connection.post(
-                '{0}v2/users/{1}/personal_tokens/'.format(config.api_base_path, username),
+                f'{config.api_base_path}v2/users/{username}/personal_tokens/',
                 json={"description": description, "application": None, "scope": scope},
                 headers=req.headers,
             )
@@ -184,11 +184,11 @@ class Base(Page):
         return self
 
     def cleanup(self):
-        log.debug('{0.endpoint} cleaning up.'.format(self))
+        log.debug(f'{self.endpoint} cleaning up.')
         return self._cleanup(self.delete)
 
     def silent_cleanup(self):
-        log.debug('{0.endpoint} silently cleaning up.'.format(self))
+        log.debug(f'{self.endpoint} silently cleaning up.')
         return self._cleanup(self.silent_delete)
 
     def _cleanup(self, delete_method):

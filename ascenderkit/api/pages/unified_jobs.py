@@ -24,7 +24,7 @@ class UnifiedJob(HasStatus, base.Base):
         items = ['id', 'name', 'status', 'failed', 'result_stdout', 'result_traceback', 'job_explanation', 'job_args']
         info = []
         for item in [x for x in items if hasattr(self, x)]:
-            info.append('{0}:{1}'.format(item, getattr(self, item)))
+            info.append(f'{item}:{getattr(self, item)}')
         output = '<{0.__class__.__name__} {1}>'.format(self, ', '.join(info))
         return output.replace('%', '%%')
 
@@ -52,7 +52,7 @@ class UnifiedJob(HasStatus, base.Base):
             stdout = stdout.replace(' ', replace_spaces)
         if expected_text not in stdout:
             pretty_stdout = pformat(stdout)
-            raise AssertionError('Expected "{}", but it was not found in stdout. Full stdout:\n {}'.format(expected_text, pretty_stdout))
+            raise AssertionError(f'Expected "{expected_text}", but it was not found in stdout. Full stdout:\n {pretty_stdout}')
 
     @property
     def is_successful(self):
@@ -141,7 +141,7 @@ class UnifiedJob(HasStatus, base.Base):
         job_args = self.job_args
         # Server-side value, not a brand reference: this must stay in step with
         # JOB_FOLDER_PREFIX in awx/main/constants.py over in ctrliq/ascender.
-        expected_prefix = '/tmp/awx_{}'.format(self.id)
+        expected_prefix = f'/tmp/awx_{self.id}'
         for arg1, arg2 in zip(job_args[:-1], job_args[1:]):
             if arg1 == '-v':
                 if ':' in arg2:
@@ -149,7 +149,7 @@ class UnifiedJob(HasStatus, base.Base):
                     if host_loc.startswith(expected_prefix):
                         return host_loc
         raise RuntimeError(
-            'Could not find a controller private_data_dir for this job. Searched for volume mount to {} inside of args {}'.format(expected_prefix, job_args)
+            f'Could not find a controller private_data_dir for this job. Searched for volume mount to {expected_prefix} inside of args {job_args}'
         )
 
 

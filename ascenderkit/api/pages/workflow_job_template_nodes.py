@@ -100,7 +100,7 @@ class WorkflowJobTemplateNode(HasCreate, base.Base):
 
     def make_approval_node(self, **kwargs):
         if 'name' not in kwargs:
-            kwargs['name'] = 'approval node {}'.format(random_title())
+            kwargs['name'] = f'approval node {random_title()}'
         self.related.create_approval_template.post(kwargs)
         return self.get()
 

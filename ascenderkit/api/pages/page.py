@@ -114,7 +114,7 @@ class Page(object):
                     if not isinstance(item, TentativePage) and is_relative_endpoint(item):
                         value[key] = TentativePage(item, self.connection)
             return value
-        raise AttributeError("{!r} object has no attribute {!r}".format(self.__class__.__name__, name))
+        raise AttributeError(f"{self.__class__.__name__!r} object has no attribute {name!r}")
 
     def __setattr__(self, name, value):
         if 'json' in self.__dict__ and name in self.json:
@@ -172,7 +172,7 @@ class Page(object):
                 text = response.text
                 if len(text) > 1024:
                     text = text[:1024] + '... <<< Truncated >>> ...'
-                log.debug("Unable to parse JSON response ({0.status_code}): {1} - '{2}'".format(response, e, text))
+                log.debug(f"Unable to parse JSON response ({response.status_code}): {e} - '{text}'")
 
         return data
 

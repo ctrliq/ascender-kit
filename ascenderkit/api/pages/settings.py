@@ -36,7 +36,7 @@ class Settings(page.PageList, Setting):
         """Helper method used to navigate to a specific settings endpoint.
         (Pdb) settings_pg.get_endpoint('all')
         """
-        base_url = '{0}{1}/'.format(self.endpoint, endpoint)
+        base_url = f'{self.endpoint}{endpoint}/'
         return self.walk(base_url)
 
     get_setting = get_endpoint

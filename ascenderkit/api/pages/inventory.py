@@ -52,7 +52,7 @@ class Inventory(HasCopy, HasCreate, HasInstanceGroups, HasVariables, base.Base):
 
     def payload(self, organization, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Inventory - {}'.format(random_title()),
+            name=kwargs.get('name') or f'Inventory - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             organization=organization.id,
         )
@@ -161,7 +161,7 @@ class Group(HasCreate, HasVariables, base.Base):
 
     def payload(self, inventory, credential=None, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Group{}'.format(random_title(non_ascii=False)),
+            name=kwargs.get('name') or f'Group{random_title(non_ascii=False)}',
             description=kwargs.get('description') or random_title(10),
             inventory=inventory.id,
         )
@@ -242,7 +242,7 @@ class Host(HasCreate, HasVariables, base.Base):
 
     def payload(self, inventory, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Host{}'.format(random_title(non_ascii=False)),
+            name=kwargs.get('name') or f'Host{random_title(non_ascii=False)}',
             description=kwargs.get('description') or random_title(10),
             inventory=inventory.id,
         )
@@ -315,7 +315,7 @@ class InventorySource(HasCreate, HasNotifications, UnifiedJobTemplate):
 
     def payload(self, inventory, source='scm', credential=None, project=None, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'InventorySource - {}'.format(random_title()),
+            name=kwargs.get('name') or f'InventorySource - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             inventory=inventory.id,
             source=source,

@@ -18,7 +18,7 @@ class InstanceGroup(HasCreate, base.Base):
             self.related.instances.post(dict(id=instance.id, disassociate=True))
 
     def payload(self, **kwargs):
-        payload = PseudoNamespace(name=kwargs.get('name') or 'Instance Group - {}'.format(random_title()))
+        payload = PseudoNamespace(name=kwargs.get('name') or f'Instance Group - {random_title()}')
         fields = ('policy_instance_percentage', 'policy_instance_minimum', 'policy_instance_list', 'is_container_group', 'max_forks', 'max_concurrent_jobs')
         update_payload(payload, fields, kwargs)
 

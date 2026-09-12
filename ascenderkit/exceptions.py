@@ -16,7 +16,7 @@ class Common(Exception):
         return self.__str__()
 
     def __str__(self):
-        return '{} - {}'.format(self.status_string, self.msg)
+        return f'{self.status_string} - {self.msg}'
 
 
 class BadRequest(Common):

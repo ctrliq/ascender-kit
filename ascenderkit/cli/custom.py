@@ -47,7 +47,7 @@ class CustomAction(metaclass=CustomActionRegistryMeta):
 class Launchable(object):
     @property
     def options_endpoint(self):
-        return self.page.endpoint + '1/{}/'.format(self.action)
+        return self.page.endpoint + f'1/{self.action}/'
 
     def add_arguments(self, parser, resource_options_parser, with_pk=True):
         from .options import pk_or_name
@@ -110,7 +110,7 @@ class BulkJobLaunch(Launchable, CustomAction):
 
     @property
     def options_endpoint(self):
-        return self.page.endpoint + '{}/'.format(self.action)
+        return self.page.endpoint + f'{self.action}/'
 
     def add_arguments(self, parser, resource_options_parser):
         Launchable.add_arguments(self, parser, resource_options_parser, with_pk=False)
@@ -132,7 +132,7 @@ class BulkHostCreate(CustomAction):
 
     @property
     def options_endpoint(self):
-        return self.page.endpoint + '{}/'.format(self.action)
+        return self.page.endpoint + f'{self.action}/'
 
     def add_arguments(self, parser, resource_options_parser):
         options = self.page.connection.options(self.options_endpoint)
@@ -152,7 +152,7 @@ class BulkHostDelete(CustomAction):
 
     @property
     def options_endpoint(self):
-        return self.page.endpoint + '{}/'.format(self.action)
+        return self.page.endpoint + f'{self.action}/'
 
     def add_arguments(self, parser, resource_options_parser):
         options = self.page.connection.options(self.options_endpoint)
@@ -266,7 +266,7 @@ class AssociationMixin(object):
             field, model_name = endpoint
             if not model_name:
                 model_name = param
-            help_text = 'The ID (or name) of the {} to {}'.format(model_name, self.action)
+            help_text = f'The ID (or name) of the {model_name} to {self.action}'
 
             class related_page(object):
                 def __init__(self, connection, resource):
@@ -285,7 +285,7 @@ class AssociationMixin(object):
                     return getattr(v2, self.resource).get(**kwargs)
 
             group.add_argument(
-                '--{}'.format(param),
+                f'--{param}',
                 metavar='',
                 type=functools.partial(pk_or_name, None, param, page=related_page(self.page.connection, param)),
                 help=help_text,
@@ -413,7 +413,7 @@ class SettingsList(CustomAction):
         parser.choices['list'].add_argument('--slug', help='optional setting category/slug', default='all')
 
     def perform(self, slug):
-        self.page.endpoint = self.page.endpoint + '{}/'.format(slug)
+        self.page.endpoint = self.page.endpoint + f'{slug}/'
         return self.page.get()
 
 
@@ -446,7 +446,7 @@ class RoleMixin(object):
         parser.choices[self.action].add_argument(
             'id',
             type=functools.partial(pk_or_name, None, self.resource, page=self.page),
-            help='The ID (or name) of the {} to {} access to/from'.format(self.resource, self.action),
+            help=f'The ID (or name) of the {self.resource} to {self.action} access to/from',
         )
         for _type in RoleMixin.roles.keys():
             if _type == 'team' and self.resource == 'team':
@@ -465,14 +465,12 @@ class RoleMixin(object):
                     return getattr(v2, self.resource).get(**kwargs)
 
             resource_group.add_argument(
-                '--{}'.format(_type),
+                f'--{_type}',
                 type=functools.partial(pk_or_name, None, _type, page=related_page(self.page.connection, dict((v, k) for k, v in self.has_roles)[_type])),
                 metavar='ID',
-                help='The ID (or name) of the target {}'.format(_type),
+                help=f'The ID (or name) of the target {_type}',
             )
-        parser.choices[self.action].add_argument(
-            '--role', type=str, choices=possible_roles, required=True, help='The name of the role to {}'.format(self.action)
-        )
+        parser.choices[self.action].add_argument('--role', type=str, choices=possible_roles, required=True, help=f'The name of the role to {self.action}')
 
     def perform(self, **kwargs):
         for resource, flag in self.has_roles:
@@ -480,9 +478,9 @@ class RoleMixin(object):
                 role = kwargs['role']
                 if role not in RoleMixin.roles[flag]:
                     options = ', '.join(RoleMixin.roles[flag])
-                    raise ValueError("invalid choice: '{}' must be one of {}".format(role, options))
+                    raise ValueError(f"invalid choice: '{role}' must be one of {options}")
                 value = kwargs[flag]
-                target = '{}v2/{}/{}'.format(config.api_base_path, resource, value)
+                target = f'{config.api_base_path}v2/{resource}/{value}'
                 detail = self.page.__class__(target, self.page.connection).get()
                 object_roles = detail['summary_fields']['object_roles']
                 actual_role = object_roles[role + '_role']

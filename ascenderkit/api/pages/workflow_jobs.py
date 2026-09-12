@@ -28,7 +28,7 @@ class WorkflowJob(UnifiedJob):
             for rel in ('failure_nodes', 'always_nodes', 'success_nodes'):
                 val = getattr(node, rel, [])
                 if val:
-                    msg += ' {} {}'.format(rel, val)
+                    msg += f' {rel} {val}'
 
         msg += '\n\nUnhandled individual job failures:\n'
         for node in node_list:

@@ -294,7 +294,7 @@ class Resources(object):
 
     def __getattr__(self, resource):
         if resource[:3] == '___':
-            raise AttributeError('No existing resource: {}'.format(resource))
+            raise AttributeError(f'No existing resource: {resource}')
         # Currently we don't handle anything under:
         # /api/o/
         # /api/login/
@@ -303,7 +303,7 @@ class Resources(object):
         # Also, if we add another API version, this would be handled here
         prefix = 'v2'
         resource = '_' + resource
-        return '{0}{1}'.format(getattr(self, prefix), getattr(self, resource))
+        return f'{getattr(self, prefix)}{getattr(self, resource)}'
 
 
 resources = Resources()

@@ -62,7 +62,7 @@ class URLRegistry(object):
         if not args or len(args) == 1:
             raise TypeError('register needs at least a url and Resource.')
         elif len(args) not in (2, 3):
-            raise TypeError('register takes at most 3 arguments ({} given).'.format(len(args)))
+            raise TypeError(f'register takes at most 3 arguments ({len(args)} given).')
 
         if len(args) == 3:  # url, method (iterable), and Resource
             url_iterable = (args[:2],)
@@ -78,9 +78,9 @@ class URLRegistry(object):
         for url_pattern, method_pattern in url_iterable:
             if url_pattern in self.store and method_pattern in self.store[url_pattern]:
                 if method_pattern.pattern == not_provided:
-                    exc_msg = '"{0.pattern}" already has methodless registration.'.format(url_pattern)
+                    exc_msg = f'"{url_pattern.pattern}" already has methodless registration.'
                 else:
-                    exc_msg = '"{0.pattern}" already has registered method "{1.pattern}"'.format(url_pattern, method_pattern)
+                    exc_msg = f'"{url_pattern.pattern}" already has registered method "{method_pattern.pattern}"'
                 raise TypeError(exc_msg)
             self.store[url_pattern][method_pattern] = resource
 
@@ -113,7 +113,7 @@ class URLRegistry(object):
                 method_pattern = re.compile(method)
                 self.default[method_pattern] = args[1]
         else:
-            raise TypeError('setdefault takes at most 2 arguments ({} given).'.format(len(args)))
+            raise TypeError(f'setdefault takes at most 2 arguments ({len(args)} given).')
 
     def get(self, url, method=not_provided):
         """Returns a single resource by previously registered path and optional method where
@@ -155,5 +155,5 @@ class URLRegistry(object):
                     if method_key.match(method):
                         registered_type = self.store[re_key][method_key]
                         break
-        log.debug('Retrieved {} by url: {}'.format(registered_type, url))
+        log.debug(f'Retrieved {registered_type} by url: {url}')
         return registered_type

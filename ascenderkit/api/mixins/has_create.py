@@ -159,7 +159,7 @@ class DSAdapter(object):
             dep = self.dependency_store[self._lookup[attr]]
             if dep:
                 return dep
-        raise AttributeError('{0.owner} has no dependency "{1}"'.format(self, attr))
+        raise AttributeError(f'{self.owner} has no dependency "{attr}"')
 
     def __getitem__(self, item):
         return getattr(self, item)

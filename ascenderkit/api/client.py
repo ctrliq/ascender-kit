@@ -17,12 +17,12 @@ class Token_Auth(requests.auth.AuthBase):
         self.token = token
 
     def __call__(self, request):
-        request.headers['Authorization'] = 'Bearer {0.token}'.format(self)
+        request.headers['Authorization'] = f'Bearer {self.token}'
         return request
 
 
 def log_elapsed(r, *args, **kwargs):  # requests hook to display API elapsed time
-    log.debug('"{0.request.method} {0.url}" elapsed: {0.elapsed}'.format(r))
+    log.debug(f'"{r.request.method} {r.url}" elapsed: {r.elapsed}')
 
 
 class Connection(object):
@@ -76,7 +76,7 @@ class Connection(object):
         """Core requests.Session wrapper that returns requests.Response objects"""
         session_request_method = getattr(self.session, method, None)
         if not session_request_method:
-            raise ConnectionException(message="Unknown request method: {0}".format(method))
+            raise ConnectionException(message=f"Unknown request method: {method}")
 
         use_endpoint = relative_endpoint
         if self.server.endswith('/'):
@@ -101,7 +101,7 @@ class Connection(object):
             except requests.exceptions.ConnectionError as err:
                 if attempt == config.client_connection_attempts:
                     raise err
-                log.exception('Failed to reach url: {0}.  Retrying.'.format(url))
+                log.exception(f'Failed to reach url: {url}.  Retrying.')
 
         return response
 

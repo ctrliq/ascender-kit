@@ -76,7 +76,7 @@ class CLI(object):
 
     def get_config(self, key):
         """Helper method for looking up the value of a --conf.xyz flag"""
-        return getattr(self.args, 'conf.{}'.format(key))
+        return getattr(self.args, f'conf.{key}')
 
     @property
     def help(self):

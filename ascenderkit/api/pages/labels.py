@@ -18,7 +18,7 @@ class Label(HasCreate, base.Base):
 
     def payload(self, organization, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'Label - {}'.format(random_title()),
+            name=kwargs.get('name') or f'Label - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             organization=organization.id,
         )

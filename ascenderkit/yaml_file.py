@@ -39,19 +39,19 @@ class Loader(yaml.SafeLoader):
 
     def extractFile(self, filename):
         file_pattern = os.path.join(self._root, filename)
-        log.debug('Will attempt to extract schema from: {0}'.format(file_pattern))
+        log.debug(f'Will attempt to extract schema from: {file_pattern}')
         if file_pattern in file_pattern_cache:
-            log.debug('File pattern cache hit: {0}'.format(file_pattern))
+            log.debug(f'File pattern cache hit: {file_pattern}')
             return file_pattern_cache[file_pattern]
 
         data = dict()
         for file_path in glob.glob(file_pattern):
             file_path = os.path.abspath(file_path)
             if file_path in file_path_cache:
-                log.debug('Schema cache hit: {0}'.format(file_path))
+                log.debug(f'Schema cache hit: {file_path}')
                 path_data = file_path_cache[file_path]
             else:
-                log.debug('Loading schema from {0}'.format(file_path))
+                log.debug(f'Loading schema from {file_path}')
                 with open(file_path, 'r') as f:
                     path_data = yaml.load(f, Loader)
                 file_path_cache[file_path] = path_data

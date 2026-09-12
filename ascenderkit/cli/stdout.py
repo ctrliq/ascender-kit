@@ -42,7 +42,7 @@ def monitor_workflow(response, session, print_stdout=True, action_timeout=None, 
         cprint('------Starting Standard Out Stream------', 'red')
 
     if print_stdout:
-        print('Launching {}...'.format(to_str(get().json.name)))
+        print(f'Launching {to_str(get().json.name)}...')
 
     started = time.time()
     seen = set()

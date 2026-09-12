@@ -13,7 +13,7 @@ class OAuth2Application(HasCreate, base.Base):
 
     def payload(self, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'OAuth2Application - {}'.format(random_title()),
+            name=kwargs.get('name') or f'OAuth2Application - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             client_type=kwargs.get('client_type', 'public'),
             authorization_grant_type=kwargs.get('authorization_grant_type', 'password'),

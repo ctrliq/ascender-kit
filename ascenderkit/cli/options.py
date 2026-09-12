@@ -52,9 +52,9 @@ def pk_or_name(v2, model_name, value, page=None):
             return int(results.results[0].id)
         if results.count > 1:
             raise argparse.ArgumentTypeError(
-                'Multiple {0} exist with that {1}. To look up an ID, run:\nascender {0} list --{1} "{2}" -f human'.format(model_name, identity, value)
+                f'Multiple {model_name} exist with that {identity}. To look up an ID, run:\nascender {model_name} list --{identity} "{value}" -f human'
             )
-        raise argparse.ArgumentTypeError('Could not find any {0} with that {1}.'.format(model_name, identity))
+        raise argparse.ArgumentTypeError(f'Could not find any {model_name} with that {identity}.')
 
     return value
 
@@ -164,14 +164,14 @@ class ResourceOptionsParser(object):
         for k, param in self.options.get(http_method, {}).items():
             required = method == 'create' and param.get('required', False) is True
             help_text = param.get('help_text', '')
-            args = ['--{}'.format(k)]
+            args = [f'--{k}']
 
             if method == 'list':
                 if k == 'id':
                     # don't allow `ascender <resource> list` to filter on `--id`
                     # it's weird, and that's what ascender <resource> get is for
                     continue
-                help_text = 'only list {} with the specified {}'.format(self.resource, k)
+                help_text = f'only list {self.resource} with the specified {k}'
 
             if method == 'list' and param.get('filterable') is False:
                 continue
@@ -189,10 +189,10 @@ class ResourceOptionsParser(object):
                     try:
                         parsed = yaml.safe_load(v)
                     except Exception:
-                        raise argparse.ArgumentTypeError("{} is not valid JSON or YAML".format(v))
+                        raise argparse.ArgumentTypeError(f"{v} is not valid JSON or YAML")
 
                 if not isinstance(parsed, expected_type):
-                    raise argparse.ArgumentTypeError("{} is not valid JSON or YAML".format(v))
+                    raise argparse.ArgumentTypeError(f"{v} is not valid JSON or YAML")
 
                 if expected_type is dict:
                     for k, v in parsed.items():
@@ -240,10 +240,10 @@ class ResourceOptionsParser(object):
                 kwargs['metavar'] = meta_map[param['type']]
 
                 if param['type'] == 'id' and not kwargs.get('help'):
-                    kwargs['help'] = 'the ID of the associated  {}'.format(k)
+                    kwargs['help'] = f'the ID of the associated  {k}'
 
                 if param['type'] == 'list_of_ids':
-                    kwargs['help'] = 'a list of comma-delimited {} to associate (IDs or unique names)'.format(k)
+                    kwargs['help'] = f'a list of comma-delimited {k} to associate (IDs or unique names)'
 
                 if param['type'] == 'json' and method != 'list':
                     help_parts = []

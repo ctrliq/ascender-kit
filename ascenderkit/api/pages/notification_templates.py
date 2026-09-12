@@ -43,7 +43,7 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
 
     def payload(self, organization, notification_type='slack', messages=not_provided, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'NotificationTemplate ({0}) - {1}'.format(notification_type, random_title()),
+            name=kwargs.get('name') or f'NotificationTemplate ({notification_type}) - {random_title()}',
             description=kwargs.get('description') or random_title(10),
             organization=organization.id,
             notification_type=notification_type,
@@ -85,7 +85,7 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
                 fields = ('rocketchat_url', 'rocketchat_no_verify_ssl')
                 cred = services.rocketchat
             else:
-                raise ValueError('Unknown notification_type {0}'.format(notification_type))
+                raise ValueError(f'Unknown notification_type {notification_type}')
 
             for field in fields:
                 if field == 'bot_token':
@@ -100,7 +100,7 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
 
     def create_payload(self, name='', description='', notification_type='slack', organization=Organization, messages=not_provided, **kwargs):
         if notification_type not in notification_types:
-            raise ValueError('Unsupported notification type "{0}".  Please use one of {1}.'.format(notification_type, notification_types))
+            raise ValueError(f'Unsupported notification type "{notification_type}".  Please use one of {notification_types}.')
         self.create_and_update_dependencies(organization)
         payload = self.payload(
             organization=self.ds.organization, notification_type=notification_type, name=name, description=description, messages=messages, **kwargs
@@ -124,11 +124,11 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
 
     def _associate(self, resource, job_result='any', disassociate=False):
         if job_result not in job_results:
-            raise ValueError('Unsupported job_result type "{0}".  Please use one of {1}.'.format(job_result, job_results))
+            raise ValueError(f'Unsupported job_result type "{job_result}".  Please use one of {job_results}.')
 
-        result_attr = 'notification_templates_{0}'.format(job_result)
+        result_attr = f'notification_templates_{job_result}'
         if result_attr not in resource.related:
-            raise ValueError('Unsupported resource "{0}".  Does not have a related {1} field.'.format(resource, result_attr))
+            raise ValueError(f'Unsupported resource "{resource}".  Does not have a related {result_attr} field.')
 
         payload = dict(id=self.id)
         if disassociate:

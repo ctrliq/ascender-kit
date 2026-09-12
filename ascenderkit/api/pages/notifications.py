@@ -10,7 +10,7 @@ class Notification(HasStatus, base.Base):
         items = ['id', 'notification_type', 'status', 'error', 'notifications_sent', 'subject', 'recipients']
         info = []
         for item in [x for x in items if hasattr(self, x)]:
-            info.append('{0}:{1}'.format(item, getattr(self, item)))
+            info.append(f'{item}:{getattr(self, item)}')
         output = '<{0.__class__.__name__} {1}>'.format(self, ', '.join(info))
         return output.replace('%', '%%')
 

@@ -12,7 +12,7 @@ class HasNotifications(object):
 
         supported_endpoints = wfjt_notification_endpoints if isinstance(self, WorkflowJobTemplate) else notification_endpoints
         if endpoint not in supported_endpoints:
-            raise ValueError('Unsupported notification endpoint "{0}". Please use one of {1}.'.format(endpoint, notification_endpoints))
+            raise ValueError(f'Unsupported notification endpoint "{endpoint}". Please use one of {notification_endpoints}.')
         with suppress(exc.NoContent):
             self.related[endpoint].post(dict(id=notification_template.id))
 
@@ -21,6 +21,6 @@ class HasNotifications(object):
 
         supported_endpoints = wfjt_notification_endpoints if isinstance(self, WorkflowJobTemplate) else notification_endpoints
         if endpoint not in supported_endpoints:
-            raise ValueError('Unsupported notification endpoint "{0}". Please use one of {1}.'.format(endpoint, notification_endpoints))
+            raise ValueError(f'Unsupported notification endpoint "{endpoint}". Please use one of {notification_endpoints}.')
         with suppress(exc.NoContent):
             self.related[endpoint].post(dict(id=notification_template.id, disassociate=notification_template.id))

@@ -88,15 +88,15 @@ class WSClient(object):
         self._ws_closed = False
         self._ws_connected_flag = threading.Event()
         if self.token is not None:
-            auth_cookie = 'token="{0.token}";'.format(self)
+            auth_cookie = f'token="{self.token}";'
         elif self.session_id is not None:
-            auth_cookie = '{1}="{0.session_id}"'.format(self, session_cookie_name)
+            auth_cookie = f'{session_cookie_name}="{self.session_id}"'
             if self.csrftoken:
-                auth_cookie += ';csrftoken={0.csrftoken}'.format(self)
+                auth_cookie += f';csrftoken={self.csrftoken}'
         else:
             auth_cookie = ''
         pref = 'wss://' if self._use_ssl else 'ws://'
-        url = '{0}{1.hostname}:{1.port}/{1.suffix}'.format(pref, self)
+        url = f'{pref}{self.hostname}:{self.port}/{self.suffix}'
         self.ws = websocket.WebSocketApp(
             url, on_open=self._on_open, on_message=self._on_message, on_error=self._on_error, on_close=self._on_close, cookie=auth_cookie
         )
@@ -202,13 +202,13 @@ class WSClient(object):
             self._pending_unsubscribe.clear()
             self._send(json.dumps(dict(groups={}, xrftoken=self.csrftoken)))
             if not self._pending_unsubscribe.wait(timeout):
-                raise RuntimeError("Failed while waiting on unsubscribe reply because timeout of {} seconds was reached.".format(timeout))
+                raise RuntimeError(f"Failed while waiting on unsubscribe reply because timeout of {timeout} seconds was reached.")
         else:
             self._send(json.dumps(dict(groups={}, xrftoken=self.csrftoken)))
 
     def _on_message(self, ws, message):
         message = json.loads(message)
-        log.debug('received message: {}'.format(message))
+        log.debug(f'received message: {message}')
         if self._add_received_time:
             message['received_time'] = datetime.now(timezone.utc)
 
@@ -235,7 +235,7 @@ class WSClient(object):
         self._ws_connected_flag.set()
 
     def _on_error(self, ws, error):
-        log.info('Error received: {}'.format(error))
+        log.info(f'Error received: {error}')
 
     def _on_close(self, ws, close_status_code, close_msg):
         log.info('Successfully closed ws.')
@@ -254,7 +254,7 @@ class WSClient(object):
 
     def _send(self, data):
         self.ws.send(data)
-        log.debug('successfully sent {}'.format(data))
+        log.debug(f'successfully sent {data}')
 
     def __iter__(self):
         while True:

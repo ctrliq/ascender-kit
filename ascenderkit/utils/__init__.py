@@ -76,7 +76,7 @@ class PseudoNamespace(dict):
         try:
             return self.__getitem__(attr)
         except KeyError:
-            raise AttributeError("{!r} has no attribute {!r}".format(self.__class__.__name__, attr))
+            raise AttributeError(f"{self.__class__.__name__!r} has no attribute {attr!r}")
 
     def __setattr__(self, attr, value):
         self.__setitem__(attr, value)
@@ -201,7 +201,7 @@ def logged_sleep(duration, level='DEBUG', stack_depth=1):
         logger = logging.getLogger(inspect.getmodule(frm[0]).__name__)
     except AttributeError:  # module is None (interactive shell)
         logger = log  # fall back to utils logger
-    logger.log(level, 'Sleeping for {0} seconds.'.format(duration))
+    logger.log(level, f'Sleeping for {duration} seconds.')
     time.sleep(duration)
 
 
@@ -217,7 +217,7 @@ def poll_until(function, interval=5, timeout=0):
 
     while True:
         elapsed = time.time() - start_time
-        log.debug('elapsed: {0:4.1f}'.format(elapsed))
+        log.debug(f'elapsed: {elapsed:4.1f}')
 
         value = function()
         if value:
@@ -228,7 +228,7 @@ def poll_until(function, interval=5, timeout=0):
 
         logged_sleep(interval, stack_depth=3)
 
-    msg = 'Timeout after {0} seconds.'.format(elapsed)
+    msg = f'Timeout after {elapsed} seconds.'
     raise WaitUntilTimeout(None, msg)
 
 
@@ -253,12 +253,12 @@ def random_ipv4():
 
 def random_ipv6():
     """Generates a random ipv6 address;; useful for testing."""
-    return ':'.join('{0:x}'.format(random.randint(0, 2**16 - 1)) for i in range(8))
+    return ':'.join(f'{random.randint(0, 2**16 - 1):x}' for i in range(8))
 
 
 def random_loopback_ip():
     """Generates a random loopback ipv4 address;; useful for testing."""
-    return "127.{}.{}.{}".format(random_int(255), random_int(255), random_int(255))
+    return f"127.{random_int(255)}.{random_int(255)}.{random_int(255)}"
 
 
 def random_utf8(*args, **kwargs):

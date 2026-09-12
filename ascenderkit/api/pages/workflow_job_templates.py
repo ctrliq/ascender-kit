@@ -33,7 +33,7 @@ class WorkflowJobTemplate(HasCopy, HasCreate, HasNotifications, HasSurvey, Unifi
 
     def payload(self, **kwargs):
         payload = PseudoNamespace(
-            name=kwargs.get('name') or 'WorkflowJobTemplate - {}'.format(random_title()), description=kwargs.get('description') or random_title(10)
+            name=kwargs.get('name') or f'WorkflowJobTemplate - {random_title()}', description=kwargs.get('description') or random_title(10)
         )
 
         optional_fields = (

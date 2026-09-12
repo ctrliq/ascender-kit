@@ -94,11 +94,11 @@ class Login(CustomCommand):
             token = api.Api().get_oauth2_token(**kwargs)
         except Exception as e:
             self.print_help(parser)
-            cprint('Error retrieving an OAuth2.0 token ({}).'.format(e.__class__), 'red')
+            cprint(f'Error retrieving an OAuth2.0 token ({e.__class__}).', 'red')
         else:
             fmt = client.get_config('format')
             if fmt == 'human':
-                print('export CONTROLLER_OAUTH_TOKEN={}'.format(token))
+                print(f'export CONTROLLER_OAUTH_TOKEN={token}')
             else:
                 print(to_str(FORMATTERS[fmt]({'token': token}, '.')).strip())
 
@@ -163,7 +163,7 @@ class Export(CustomCommand):
             # 1) the resource flag is not used at all, which will result in the attr being None
             # 2) the resource flag is used with no argument, which will result in the attr being ''
             # 3) the resource flag is used with an argument, and the attr will be that argument's value
-            resources.add_argument('--{}'.format(resource), nargs='*')
+            resources.add_argument(f'--{resource}', nargs='*')
 
     def handle(self, client, parser):
         self.extend_parser(parser)
