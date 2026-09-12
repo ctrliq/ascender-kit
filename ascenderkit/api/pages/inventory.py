@@ -28,7 +28,7 @@ class Inventory(HasCopy, HasCreate, HasInstanceGroups, HasVariables, base.Base):
                 continue
 
             # output host groups
-            output.append('[%s]' % group)
+            output.append(f'[{group}]')
             for host in inv_dict[group].get('hosts', []):
                 # FIXME ... include hostvars
                 output.append(host)
@@ -36,16 +36,16 @@ class Inventory(HasCopy, HasCreate, HasInstanceGroups, HasVariables, base.Base):
 
             # output child groups
             if inv_dict[group].get('children', []):
-                output.append('[%s:children]' % group)
+                output.append(f'[{group}:children]')
                 for child in inv_dict[group].get('children', []):
                     output.append(child)
                 output.append('')  # newline
 
             # output group vars
             if inv_dict[group].get('vars', {}).items():
-                output.append('[%s:vars]' % group)
+                output.append(f'[{group}:vars]')
                 for k, v in inv_dict[group].get('vars', {}).items():
-                    output.append('%s=%s' % (k, v))
+                    output.append(f'{k}={v}')
                 output.append('')  # newline
 
         print('\n'.join(output))
@@ -371,20 +371,19 @@ class InventorySource(HasCreate, HasNotifications, UnifiedJobTemplate):
         update_pg = self.get_related('update')
 
         # assert can_update == True
-        assert update_pg.can_update, "The specified inventory_source (id:%s) is not able to update (can_update:%s)" % (self.id, update_pg.can_update)
+        assert update_pg.can_update, f"The specified inventory_source (id:{self.id}) is not able to update (can_update:{update_pg.can_update})"
 
         # start the inventory_update
         result = update_pg.post()
 
         # assert JSON response
-        assert 'inventory_update' in result.json, "Unexpected JSON response when starting an inventory_update.\n%s" % json.dumps(result.json, indent=2)
+        assert 'inventory_update' in result.json, f"Unexpected JSON response when starting an inventory_update.\n{json.dumps(result.json, indent=2)}"
 
         # locate and return the inventory_update
         jobs_pg = self.related.inventory_updates.get(id=result.json['inventory_update'])
-        assert jobs_pg.count == 1, "An inventory_update started (id:%s) but job not found in response at %s/inventory_updates/" % (
-            result.json['inventory_update'],
-            self.url,
-        )
+        assert (
+            jobs_pg.count == 1
+        ), f"An inventory_update started (id:{result.json['inventory_update']}) but job not found in response at {self.url}/inventory_updates/"
         return jobs_pg.results[0]
 
     @property

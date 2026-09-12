@@ -16,13 +16,13 @@ def upload_inventory(ansible_runner, nhosts=10, ini=False):
         copy_dest = '/tmp/inventory{}.sh'.format(random_title(non_ascii=False))
         copy_content = '''#!/bin/bash
 cat <<EOF
-%s
-EOF''' % json_inventory(nhosts)
+{json_inventory(nhosts)}
+EOF'''
 
     # Copy script to test system
     contacted = ansible_runner.copy(dest=copy_dest, force=True, mode=copy_mode, content=copy_content)
     for result in contacted.values():
-        assert not result.get('failed', False), "Failed to create inventory file: %s" % result
+        assert not result.get('failed', False), f"Failed to create inventory file: {result}"
     return copy_dest
 
 
@@ -88,21 +88,21 @@ def ini_inventory(nhosts=10):
             continue
 
         # output host groups
-        output.append('[%s]' % group)
+        output.append(f'[{group}]')
         for host in inv_list[group].get('hosts', []):
             output.append(host)
         output.append('')  # newline
 
         # output child groups
-        output.append('[%s:children]' % group)
+        output.append(f'[{group}:children]')
         for child in inv_list[group].get('children', []):
             output.append(child)
         output.append('')  # newline
 
         # output group vars
-        output.append('[%s:vars]' % group)
+        output.append(f'[{group}:vars]')
         for k, v in inv_list[group].get('vars', {}).items():
-            output.append('%s=%s' % (k, v))
+            output.append(f'{k}={v}')
         output.append('')  # newline
 
     return '\n'.join(output)

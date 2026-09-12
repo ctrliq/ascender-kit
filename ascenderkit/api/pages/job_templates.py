@@ -26,14 +26,13 @@ class JobTemplate(HasCopy, HasCreate, HasInstanceGroups, HasNotifications, HasSu
         # return job
         if result.json['type'] == 'job':
             jobs_pg = self.get_related('jobs', id=result.json['job'])
-            assert jobs_pg.count == 1, "job_template launched (id:%s) but job not found in response at %s/jobs/" % (result.json['job'], self.url)
+            assert jobs_pg.count == 1, f"job_template launched (id:{result.json['job']}) but job not found in response at {self.url}/jobs/"
             return jobs_pg.results[0]
         elif result.json['type'] == 'workflow_job':
             slice_workflow_jobs = self.get_related('slice_workflow_jobs', id=result.json['id'])
-            assert slice_workflow_jobs.count == 1, "job_template launched sliced job (id:%s) but not found in related %s/slice_workflow_jobs/" % (
-                result.json['id'],
-                self.url,
-            )
+            assert (
+                slice_workflow_jobs.count == 1
+            ), f"job_template launched sliced job (id:{result.json['id']}) but not found in related {self.url}/slice_workflow_jobs/"
             return slice_workflow_jobs.results[0]
         else:
             raise RuntimeError('Unexpected type of job template spawned job.')

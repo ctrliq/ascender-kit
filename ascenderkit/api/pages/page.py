@@ -194,7 +194,7 @@ class Page(object):
             ds = None
 
         data = self.extract_data(response)
-        exc_str = "%s (%s) received" % (http.responses[response.status_code], response.status_code)
+        exc_str = f"{http.responses[response.status_code]} ({response.status_code}) received"
 
         exception = exception_from_status_code(response.status_code)
         if exception:

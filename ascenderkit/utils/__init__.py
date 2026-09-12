@@ -173,7 +173,7 @@ def load_credentials(filename=None):
             credentials_dict = yaml.safe_load(credentials_fh)
             return credentials_dict
     else:
-        msg = 'Unable to load credentials file at %s' % path
+        msg = f'Unable to load credentials file at {path}'
         raise Exception(msg)
 
 
@@ -188,7 +188,7 @@ def load_projects(filename=None):
             projects_dict = yaml.safe_load(projects_fh)
             return projects_dict
     else:
-        msg = 'Unable to load projects file at %s' % path
+        msg = f'Unable to load projects file at {path}'
         raise Exception(msg)
 
 

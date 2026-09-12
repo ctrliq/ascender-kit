@@ -38,7 +38,7 @@ class HelpfulArgumentParser(ArgumentParser):
         """
         self.print_help(sys.stderr)
         self._print_message('\n')
-        self.exit(2, '%s: %s\n' % (self.prog, message))
+        self.exit(2, f'{self.prog}: {message}\n')
 
 
 def color_enabled():

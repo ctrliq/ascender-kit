@@ -92,5 +92,5 @@ def load_file(filename):
             # FIXME - support load_all()
             return yaml.load(fp, Loader=Loader)
     else:
-        msg = 'Unable to load data file at %s' % path
+        msg = f'Unable to load data file at {path}'
         raise Exception(msg)

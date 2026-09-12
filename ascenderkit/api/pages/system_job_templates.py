@@ -14,10 +14,7 @@ class SystemJobTemplate(UnifiedJobTemplate, HasNotifications):
 
         # return job
         jobs_pg = self.get_related('jobs', id=result.json['system_job'])
-        assert jobs_pg.count == 1, "system_job_template launched (id:%s) but unable to find matching job at %s/jobs/" % (
-            result.json['system_job'],
-            self.url,
-        )
+        assert jobs_pg.count == 1, f"system_job_template launched (id:{result.json['system_job']}) but unable to find matching job at {self.url}/jobs/"
         return jobs_pg.results[0]
 
 

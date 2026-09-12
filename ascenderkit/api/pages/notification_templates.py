@@ -26,10 +26,9 @@ class NotificationTemplate(HasCopy, HasCreate, base.Base):
 
         # return notification page
         notifications_pg = self.get_related('notifications', id=notification_id).wait_until_count(1)
-        assert notifications_pg.count == 1, "test notification triggered (id:%s) but notification not found in response at %s/notifications/" % (
-            notification_id,
-            self.url,
-        )
+        assert (
+            notifications_pg.count == 1
+        ), f"test notification triggered (id:{notification_id}) but notification not found in response at {self.url}/notifications/"
         return notifications_pg.results[0]
 
     def silent_delete(self):
