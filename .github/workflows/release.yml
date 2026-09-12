@@ -12,8 +12,16 @@ permissions:
 
 jobs:
 
+  # A tag used to go straight to build and publish, so nothing re-ran the lint
+  # and test jobs at the commit being released. Reusing the CI workflow rather
+  # than restating its matrix keeps the two from drifting.
+  check:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
   build:
     name: Build distribution
+    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1

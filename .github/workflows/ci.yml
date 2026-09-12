@@ -11,6 +11,9 @@ on:
       - main
       - stable-*
   workflow_dispatch:
+  # Called by release.yml, so a tag cannot publish anything the checks have not
+  # passed on first.
+  workflow_call:
 
 permissions:
   contents: read
