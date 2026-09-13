@@ -68,4 +68,4 @@ class Organizations(page.PageList, Organization):
     pass
 
 
-page.register_page([resources.organizations, resources.user_organizations, resources.project_organizations], Organizations)
+page.register_page([resources.organizations, resources.user_organizations], Organizations)

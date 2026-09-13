@@ -32,42 +32,14 @@ class JobEvent(base.Base):
     pass
 
 
-page.register_page([resources.job_event, resources.job_job_event], JobEvent)
+page.register_page(resources.job_event, JobEvent)
 
 
 class JobEvents(page.PageList, JobEvent):
     pass
 
 
-page.register_page([resources.job_events, resources.job_job_events, resources.job_event_children, resources.group_related_job_events], JobEvents)
-
-
-class JobPlay(base.Base):
-    pass
-
-
-page.register_page(resources.job_play, JobPlay)
-
-
-class JobPlays(page.PageList, JobPlay):
-    pass
-
-
-page.register_page(resources.job_plays, JobPlays)
-
-
-class JobTask(base.Base):
-    pass
-
-
-page.register_page(resources.job_task, JobTask)
-
-
-class JobTasks(page.PageList, JobTask):
-    pass
-
-
-page.register_page(resources.job_tasks, JobTasks)
+page.register_page([resources.job_job_events, resources.job_event_children, resources.group_related_job_events], JobEvents)
 
 
 class JobHostSummary(base.Base):

@@ -14,10 +14,3 @@ page.register_page(
     ],
     WorkflowApprovalTemplate,
 )
-
-
-class WorkflowApprovalTemplates(page.PageList, WorkflowApprovalTemplate):
-    pass
-
-
-page.register_page(resources.workflow_approval_templates, WorkflowApprovalTemplates)

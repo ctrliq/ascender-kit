@@ -24,6 +24,18 @@ and this project adheres to the versioning of
   self-signed certificate. The CLI is unaffected: it already verified unless given
   `-k` / `--conf.insecure`.
 
+### Removed
+
+- Twenty six endpoints the platform no longer serves are gone from `Resources`,
+  among them `fact_view`, `job_plays`, `job_tasks`, `job_start`, the `permissions`
+  endpoints on users and teams, the nested `schedules/<id>/` paths, and the `user`
+  and `user-defaults` settings categories. Every one of them answered 404, so
+  nothing that worked stops working.
+- The page classes that existed only to represent those endpoints: `FactView`,
+  `FactVersion`, `FactVersions`, `JobPlay`, `JobPlays`, `JobTask`, `JobTasks` and
+  `WorkflowApprovalTemplates`. The registry could not hand any of them out, since
+  no URL reached them.
+
 ### Fixed
 
 - `WSClient` now verifies the server certificate, following the same

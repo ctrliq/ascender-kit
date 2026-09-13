@@ -284,29 +284,6 @@ class Hosts(page.PageList, Host):
 page.register_page([resources.hosts, resources.group_related_hosts, resources.inventory_related_hosts, resources.inventory_sources_related_hosts], Hosts)
 
 
-class FactVersion(base.Base):
-    pass
-
-
-page.register_page(resources.host_related_fact_version, FactVersion)
-
-
-class FactVersions(page.PageList, FactVersion):
-    @property
-    def count(self):
-        return len(self.results)
-
-
-page.register_page(resources.host_related_fact_versions, FactVersions)
-
-
-class FactView(base.Base):
-    pass
-
-
-page.register_page(resources.fact_view, FactView)
-
-
 class InventorySource(HasCreate, HasNotifications, UnifiedJobTemplate):
     optional_schedule_fields = tuple()
     dependencies = [Inventory]

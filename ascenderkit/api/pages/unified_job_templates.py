@@ -69,9 +69,6 @@ class UnifiedJobTemplate(HasStatus, base.Base):
         return super().is_successful and not self.last_update_failed and self.last_updated is not None
 
 
-page.register_page(resources.unified_job_template, UnifiedJobTemplate)
-
-
 class UnifiedJobTemplates(page.PageList, UnifiedJobTemplate):
     pass
 
