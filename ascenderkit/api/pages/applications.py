@@ -44,7 +44,7 @@ class OAuth2Applications(page.PageList, OAuth2Application):
     pass
 
 
-page.register_page(resources.applications, OAuth2Applications)
+page.register_page([resources.applications, resources.organization_applications, resources.user_applications], OAuth2Applications)
 
 
 class OAuth2AccessToken(HasCreate, base.Base):
@@ -79,4 +79,7 @@ class OAuth2AccessTokens(page.PageList, OAuth2AccessToken):
     pass
 
 
-page.register_page(resources.tokens, OAuth2AccessTokens)
+page.register_page(
+    [resources.tokens, resources.application_tokens, resources.user_tokens, resources.user_authorized_tokens, resources.user_personal_tokens],
+    OAuth2AccessTokens,
+)

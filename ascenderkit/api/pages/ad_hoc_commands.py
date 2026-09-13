@@ -5,6 +5,7 @@ from ascenderkit.utils import not_provided as np
 from ascenderkit.api.resources import resources
 
 from .jobs import UnifiedJob
+from . import base
 from . import page
 
 
@@ -70,3 +71,17 @@ page.register_page(
     [resources.ad_hoc_commands, resources.inventory_related_ad_hoc_commands, resources.group_related_ad_hoc_commands, resources.host_related_ad_hoc_commands],
     AdHocCommands,
 )
+
+
+class AdHocCommandEvent(base.Base):
+    pass
+
+
+page.register_page(resources.ad_hoc_event, AdHocCommandEvent)
+
+
+class AdHocCommandEvents(page.PageList, AdHocCommandEvent):
+    pass
+
+
+page.register_page([resources.ad_hoc_events, resources.host_related_ad_hoc_command_events], AdHocCommandEvents)

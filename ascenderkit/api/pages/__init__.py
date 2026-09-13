@@ -42,3 +42,5 @@ from .metrics import *  # NOQA
 from .subscriptions import *  # NOQA
 from .workflow_approval_templates import *  # NOQA
 from .host_metrics import *  # NOQA
+from .receptor_addresses import *  # NOQA
+from .service_index import *  # NOQA

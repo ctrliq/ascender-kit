@@ -165,6 +165,8 @@ page.register_page(
         resources.notification_templates_error,
         resources.notification_templates_success,
         resources.notification_templates_approvals,
+        resources.job_template_notification_templates_changed,
+        resources.organization_notification_templates_changed,
     ],
     NotificationTemplates,
 )

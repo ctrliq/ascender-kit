@@ -16,3 +16,10 @@ class HostMetrics(page.PageList, HostMetric):
 page.register_page([resources.host_metric], HostMetric)
 
 page.register_page([resources.host_metrics], HostMetrics)
+
+
+class HostMetricSummaryMonthly(page.PageList, base.Base):
+    pass
+
+
+page.register_page(resources.host_metric_summary_monthly, HostMetricSummaryMonthly)

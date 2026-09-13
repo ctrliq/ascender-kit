@@ -16,7 +16,7 @@ from ascenderkit.api.resources import Resources
 
 #: Patterns with a wildcard stand for many concrete routes, so a single request
 #: says nothing about them. They are checked by the pages that use them.
-WILDCARD = re.compile(r'\\w|\[\^|\(\?|\.\*')
+WILDCARD = re.compile(r'\\w|\[|\(\?|\.\*')
 
 #: The id put into a detail path. Its object almost certainly does not exist,
 #: which is the point: the reply says whether the route does.

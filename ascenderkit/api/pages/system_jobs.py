@@ -1,5 +1,6 @@
 from ascenderkit.api.pages import UnifiedJob
 from ascenderkit.api.resources import resources
+from . import base
 from . import page
 
 
@@ -22,3 +23,14 @@ class SystemJobCancel(UnifiedJob):
 
 
 page.register_page(resources.system_job_cancel, SystemJobCancel)
+
+
+class SystemJobEvent(base.Base):
+    pass
+
+
+class SystemJobEvents(page.PageList, SystemJobEvent):
+    pass
+
+
+page.register_page(resources.system_job_events, SystemJobEvents)

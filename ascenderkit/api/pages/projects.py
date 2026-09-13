@@ -149,6 +149,17 @@ class ProjectUpdates(page.PageList, ProjectUpdate):
 page.register_page([resources.project_updates, resources.project_project_updates], ProjectUpdates)
 
 
+class ProjectUpdateEvent(base.Base):
+    pass
+
+
+class ProjectUpdateEvents(page.PageList, ProjectUpdateEvent):
+    pass
+
+
+page.register_page(resources.project_update_events, ProjectUpdateEvents)
+
+
 class ProjectUpdateLaunch(base.Base):
     pass
 

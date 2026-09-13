@@ -16,6 +16,8 @@ page.register_page(
         resources.project_access_list,
         resources.job_template_access_list,
         resources.team_access_list,
+        resources.instance_group_access_list,
+        resources.workflow_job_template_access_list,
     ],
     AccessList,
 )

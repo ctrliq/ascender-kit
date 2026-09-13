@@ -34,4 +34,4 @@ class Roles(page.PageList, Role):
     pass
 
 
-page.register_page([resources.roles, resources.related_roles, resources.related_object_roles], Roles)
+page.register_page([resources.roles, resources.related_roles, resources.related_object_roles, resources.role_children, resources.role_parents], Roles)

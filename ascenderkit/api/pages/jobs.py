@@ -39,7 +39,7 @@ class JobEvents(page.PageList, JobEvent):
     pass
 
 
-page.register_page([resources.job_job_events, resources.job_event_children, resources.group_related_job_events], JobEvents)
+page.register_page([resources.job_job_events, resources.job_event_children, resources.group_related_job_events, resources.host_related_job_events], JobEvents)
 
 
 class JobHostSummary(base.Base):
@@ -53,7 +53,7 @@ class JobHostSummaries(page.PageList, JobHostSummary):
     pass
 
 
-page.register_page([resources.job_host_summaries, resources.group_related_job_host_summaries], JobHostSummaries)
+page.register_page([resources.job_host_summaries, resources.group_related_job_host_summaries, resources.host_related_job_host_summaries], JobHostSummaries)
 
 
 class JobRelaunch(base.Base):

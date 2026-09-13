@@ -43,5 +43,16 @@ class Labels(page.PageList, Label):
 
 
 page.register_page(
-    [resources.labels, resources.inventory_labels, resources.job_labels, resources.job_template_labels, resources.workflow_job_template_labels], Labels
+    [
+        resources.labels,
+        resources.inventory_labels,
+        resources.job_labels,
+        resources.job_template_labels,
+        resources.schedule_labels,
+        resources.workflow_job_labels,
+        resources.workflow_job_node_labels,
+        resources.workflow_job_template_labels,
+        resources.workflow_job_template_node_labels,
+    ],
+    Labels,
 )
