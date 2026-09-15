@@ -19,7 +19,6 @@ class Resources:
     _bulk = 'bulk/'
     _bulk_job_launch = 'bulk/job_launch/'
     _config = 'config/'
-    _config_attach = 'config/attach/'
     _credential = r'credentials/\d+/'
     _credential_access_list = r'credentials/\d+/access_list/'
     _credential_copy = r'credentials/\d+/copy/'
@@ -292,7 +291,6 @@ class Resources:
     _workflow_job_template_workflow_nodes = r'workflow_job_templates/\d+/workflow_nodes/'
     _workflow_job_templates = 'workflow_job_templates/'
     _workflow_job_workflow_nodes = r'workflow_jobs/\d+/workflow_nodes/'
-    _subscriptions = 'config/subscriptions/'
     _workflow_jobs = 'workflow_jobs/'
     api = str(config.api_base_path)
     common = api + r'v\d+/'

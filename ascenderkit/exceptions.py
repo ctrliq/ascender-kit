@@ -51,14 +51,6 @@ class BadGateway(Common):
     pass
 
 
-class LicenseExceeded(Common):
-    pass
-
-
-class LicenseInvalid(Common):
-    pass
-
-
 class MethodNotAllowed(Common):
     pass
 

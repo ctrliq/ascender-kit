@@ -21,30 +21,6 @@ _page_registry = URLRegistry()
 get_registered_page = _page_registry.get
 
 
-def is_license_invalid(response):
-    if "Invalid license" in response.text:
-        return True
-    if "Missing 'eula_accepted' property" in response.text:
-        return True
-    if "'eula_accepted' must be True" in response.text:
-        return True
-    if "Invalid license data" in response.text:
-        return True
-
-
-def is_license_exceeded(response):
-    if "license range of" in response.text and "instances has been exceeded" in response.text:
-        return True
-    if "License count of" in response.text and "instances has been reached" in response.text:
-        return True
-    if "License count of" in response.text and "instances has been exceeded" in response.text:
-        return True
-    if "License has expired" in response.text:
-        return True
-    if "License is missing" in response.text:
-        return True
-
-
 def is_duplicate_error(response):
     if "already exists" in response.text:
         return True
@@ -222,16 +198,9 @@ class Page:
             return registered_type(self.connection, endpoint=endpoint, json=data, last_elapsed=response.elapsed, r=response, ds=ds)
 
         elif response.status_code == http.FORBIDDEN:
-            if is_license_invalid(response):
-                raise exc.LicenseInvalid(exc_str, data)
-            elif is_license_exceeded(response):
-                raise exc.LicenseExceeded(exc_str, data)
-            else:
-                raise exc.Forbidden(exc_str, data)
+            raise exc.Forbidden(exc_str, data)
 
         elif response.status_code == http.BAD_REQUEST:
-            if is_license_invalid(response):
-                raise exc.LicenseInvalid(exc_str, data)
             if is_duplicate_error(response):
                 raise exc.Duplicate(exc_str, data)
             else:
