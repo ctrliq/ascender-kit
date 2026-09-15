@@ -60,8 +60,13 @@ class WSClient:
         csrftoken=None,
         add_received_time=False,
         # Server-side value, not a brand reference: this must stay in step with
-        # SESSION_COOKIE_NAME in awx/settings/defaults.py over in ctrliq/ascender.
-        session_cookie_name='awx_sessionid',
+        # SESSION_COOKIE_NAME in ascender/settings/defaults.py over in
+        # ctrliq/ascender, which was awx_sessionid before the rename. Unlike the
+        # HTTP side this cookie is sent rather than read, so it has to be the one
+        # name the server expects: a caller holding a Connection should pass its
+        # session_cookie_name, which Connection discovers from the
+        # X-API-Session-Cookie-Name header at login and is right for any release.
+        session_cookie_name='ascender_sessionid',
         verify=None,
     ):
         # delay this import, because this is an optional dependency

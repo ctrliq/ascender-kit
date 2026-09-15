@@ -139,17 +139,20 @@ class UnifiedJob(HasStatus, base.Base):
         """
         self.get()
         job_args = self.job_args
-        # Server-side value, not a brand reference: this must stay in step with
-        # JOB_FOLDER_PREFIX in awx/main/constants.py over in ctrliq/ascender.
-        expected_prefix = f'/tmp/awx_{self.id}'
+        # Server-side values, not brand references: these must stay in step with
+        # JOB_FOLDER_PREFIX and FORMER_JOB_FOLDER_PREFIX in
+        # ascender/main/constants.py over in ctrliq/ascender. Both are accepted,
+        # because this client talks to whichever release the server is running
+        # and the folder name changed between two of them.
+        expected_prefixes = (f'/tmp/ascender_{self.id}', f'/tmp/awx_{self.id}')
         for arg1, arg2 in zip(job_args[:-1], job_args[1:]):
             if arg1 == '-v':
                 if ':' in arg2:
                     host_loc = arg2.split(':')[0]
-                    if host_loc.startswith(expected_prefix):
+                    if host_loc.startswith(expected_prefixes):
                         return host_loc
         raise RuntimeError(
-            f'Could not find a controller private_data_dir for this job. Searched for volume mount to {expected_prefix} inside of args {job_args}'
+            f'Could not find a controller private_data_dir for this job. Searched for a volume mount to one of {expected_prefixes} inside of args {job_args}'
         )
 
 
