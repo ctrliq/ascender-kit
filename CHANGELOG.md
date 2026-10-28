@@ -7,6 +7,11 @@ and this project adheres to the versioning of
 [Ascender](https://github.com/ctrliq/ascender) itself.
 
 ## [Unreleased]
+## [25.6.3] - 2026-10-27
+
+### Changed
+
+- No Changes - Version bump to match Ascender
 
 ## [25.5.1] - 2026-08-17
 
